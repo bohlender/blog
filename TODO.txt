@@ -1,5 +1,4 @@
 - Temporary 404 page
-- Add sitemap to robots.txt
 
 - Proper 404 page
   - Trainer Scroller?
