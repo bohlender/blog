@@ -1,4 +1,4 @@
-baseURL = "https://bohlender.github.io/"
+baseURL = "http://bohlender.github.io/"
 languageCode = "en-gb"
 title = "Dimitri Bohlender"
 copyright = "© Dimitri Bohlender"
