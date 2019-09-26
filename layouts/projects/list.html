@@ -1,0 +1,57 @@
+{{ define "content"}}
+    <main>
+        <header>
+            <h1>{{ .Title }}</h1>
+            {{ .Content }}
+        </header>
+    {{- range .Pages }}
+        <article class="{{ cond .Params.work `work` `personal` }}">
+            <header>
+                <h2 id="{{ .Title | anchorize }}"><a href="#{{ .Title | anchorize }}">{{ .Title }}</a></h2>
+                <div class="metadata">
+                    {{- $dateTime := .PublishDate.Format "2006-01-02" }}
+                    <time datetime="{{ $dateTime }}">{{ .PublishDate.Format "2006" }}</time>
+                    {{ with .Params.tools }}
+                    <ul>
+                        {{ range . }}
+                        <li>
+                            <a class="source" href="{{ .url }}">{{ .name }}</a>
+                        </li>
+                        {{ end }}
+                    </ul>
+                    {{ end }}
+                </div>
+            </header>
+            <div class="flex-wrapper">
+                <div class="project-description">
+                    {{ .Content | markdownify }}
+                </div>
+                {{ with .Resources.ByType "image" }}
+                <div class="figures">
+                    {{ range . }}
+                        {{- $thumb := .Resize "500x" }}
+                        <figure class="figure-inner">
+                            <a class="perfundo__link" href="#perfundo-{{ .RelPermalink | sha1 }}">
+                                <img class="thumbnail-shadow" src="{{ $thumb.RelPermalink }}">
+                            </a>
+                            {{- with .Title }}
+                            <figcaption>{{ . }}</figcaption>
+                            {{- end -}}
+                        </figure>
+                        <div id="perfundo-{{ .RelPermalink | sha1 }}" class="perfundo__overlay">
+                            <figure class="perfundo__content perfundo__figure">
+                                <div class="perfundo__image" style="height: {{ .Height }}px; width: {{ .Width }}px; background-image: url({{ .RelPermalink }});"></div>
+                                {{- with .Title }}
+                                <figcaption>{{ . }}</figcaption>
+                                {{- end -}}
+                            </figure>
+                            <a href="#perfundo-untarget" class="perfundo__close perfundo__control">Close</a>
+                        </div>
+                    {{ end }}
+                </div>
+                {{ end }}
+            </div>
+        </article>
+    {{- end }}
+    </main>
+{{ end }}

@@ -1,0 +1,6 @@
+<hr style="margin-top: 2em">
+<div class="links">
+{{ range .Page.Resources.Match ((.Get 0) | default "*") }}
+    <a href="{{ .RelPermalink }}" class="button">{{ .Name }}</a>
+{{ end }}
+</div>

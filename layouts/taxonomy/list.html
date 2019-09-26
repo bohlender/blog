@@ -1,0 +1,17 @@
+{{ define "content"}}
+{{ partial "blog-banner" . }}
+<div class="notepad-wrapper">
+    <div class="note">
+    	<a href="/tags">Show all tags</a>
+    </div>
+    <main class="notepad"> 
+        <h1 class="tag-block">{{ .Title | lower }}</h1>
+        <hr>
+        {{ .Content }}
+        {{ range .Paginator.Pages }}
+            {{ .Render "summary" }}
+        {{ end }}
+        {{ template "_internal/pagination.html" . }}
+    </main>
+</div>
+{{ end }}

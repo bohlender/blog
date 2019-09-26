@@ -1,0 +1,36 @@
+<!-- Params: file pattern, lang, start line, end line -->
+{{ $file := .Page.Resources.GetMatch (.Get 0) }}
+{{ $lines := (split $file.Content "\n") }}
+{{ $numLines := len $lines }}
+{{ $startline := (.Get 2) | default 1 | int }}
+{{ $endline := (.Get 3) | default (len $lines) | int }}
+<!-- Restrict lines to requested range -->
+{{ if gt $startline 1 }}
+    {{ $lines = after (sub $startline 1) $lines }}
+{{ end }}
+{{ if lt $endline $numLines }}
+    {{ $numLines := sub (add $endline 1) $startline }}
+    {{ $lines = first $numLines $lines }}
+{{ end }}
+<!-- Compute min. number of prefixed whitespace characters -->
+{{ $charsToTrim := 31337 }}
+{{ range $lines }}
+    {{ $curNumWs := (sub (len .) (len (strings.TrimLeft " " .))) }}
+    {{ if (and (gt (len .) 0) (lt $curNumWs $charsToTrim)) }}
+        {{ $charsToTrim = $curNumWs }}
+    {{ end }}
+{{ end }}
+<!-- Remove this number of preceeding whitespace characters in every line -->
+{{ $trimmedLines := slice }}
+{{ range $line, $lines }}
+    {{ if (gt $charsToTrim 0) }}
+        {{ $line = after $charsToTrim $line }}
+    {{ end }}
+    {{ $trimmedLines = $trimmedLines | append $line }}
+{{ end }}
+<figure class="highlight-figure">
+    {{ highlight (delimit $trimmedLines "\n") (.Get 1) (printf "linenos=table,linenostart=%d" $startline) }}
+    <figcaption>
+        <a href="{{ $file.Permalink }}">{{ $file.Name }}</a>
+    </figcaption>
+</figure>

@@ -1,0 +1,20 @@
+{{ define "content"}}
+{{ partial "blog-banner" . }}
+<div class="notepad-wrapper">
+    <!-- <div class="note">
+    	<a href="/tags">Show all tags</a>
+    </div> -->
+    <main class="notepad">
+        <h1>{{ .Title }}</h1>
+        {{ .Content }}
+        <hr>
+        <ol class="terms-list">
+        {{ $curType := .Type }}
+        {{- range .Data.Terms.ByCount }}
+            {{- $href := printf "/%s/%s" $curType .Name }}
+            <li><a class="tag-block" href="{{ $href }}"><span class="badge">{{ .Count }}</span> {{ .Name }}</a></li>
+        {{- end }}
+        </ol>
+    </main>
+</div>
+{{ end }}

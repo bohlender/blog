@@ -1,0 +1,7 @@
+<aside>
+    {{- $markdown := .Inner | markdownify -}}
+    {{ $hasP := strings.Contains $markdown "<p>" }}
+    {{ if not $hasP }}<p>{{ end }}
+    {{ $markdown }}
+    {{ if not $hasP }}</p>{{ end }}
+</aside>

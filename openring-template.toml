@@ -1,0 +1,10 @@
+{{- range .Articles }}
+[[articles]]
+link = '''{{ .Link }}'''
+title = '''{{ .Title }}'''
+summary = '''{{ .Summary }}'''
+sourceLink = '''{{ .SourceLink }}'''
+sourceTitle = '''{{ .SourceTitle }}'''
+date = '''{{ .Date | date }}'''
+
+{{- end }}

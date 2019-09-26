@@ -1,0 +1,70 @@
+{{ $srcHigh := (.Get "src") }}
+{{ $srcLow := (.Get "src") }}
+{{ $needsLb := false }}
+{{ $res := .Page.Resources.GetMatch $srcHigh }}
+{{ if (and $res (gt $res.Width 650) )}}
+    {{ $width := (.Get "width") | default 650 | int }}
+    {{ $resizeOption := printf "%dx" $width }}
+    {{ $srcLow = ($res.Resize $resizeOption).RelPermalink }}
+    {{ $needsLb = true }}
+{{ end }}
+<!-- 1) Some nesting is needed to align figcaption with img in all cases -->
+<!-- 2) The figure-nesting is needed (div doesn't work) to prevent their disappearing in ffox reader view -->
+<figure class="figure-outer">
+    <figure class="{{ .Get `class` | default `figure-inner` }}">
+        {{- if $needsLb -}}
+            <a class="perfundo__link" href="#perfundo-{{ $res.Name }}">
+        {{- end }}
+        {{- if (and (.Get "link") (not $needsLb)) -}}
+            <a href="{{ .Get "link" }}"{{ with .Get "target" }} target="{{ . }}"{{ end }}{{ with .Get "rel" }} rel="{{ . }}"{{ end }}>
+        {{- end }}
+        <img src="{{ $srcLow }}"
+             {{- if or (.Get "alt") (.Get "caption") }}
+             alt="{{ with .Get "alt" }}{{ . }}{{ else }}{{ .Get "caption" | markdownify| plainify }}{{ end }}"
+             {{- end -}}
+             {{- with .Get "width" }} width="{{ . }}"{{ end -}}
+             {{- with .Get "height" }} height="{{ . }}"{{ end -}}
+        /> <!-- Closing img tag -->
+        {{- if (or (.Get "link") $needsLb)}}</a>{{ end -}}
+        {{- if or (or (.Get "title") (.Get "caption")) (.Get "attr") }}
+            <figcaption>
+                {{ with (.Get "title") -}}
+                    {{ . }}
+                {{- end -}}
+                {{- if or (.Get "caption") (.Get "attr") -}}
+                <p>
+                    {{- .Get "caption" | markdownify -}}
+                    {{- with .Get "attrlink" }}
+                    <a href="{{ . }}">
+                    {{- end -}}
+                    {{- .Get "attr" | markdownify -}}
+                    {{- if .Get "attrlink" }}</a>{{ end }}
+                </p>
+                {{- end }}
+            </figcaption>
+        {{- end }}
+    </figure>
+    {{ if $needsLb}}
+    <div id="perfundo-{{ $res.Name }}" class="perfundo__overlay">
+        <figure class="perfundo__content perfundo__figure">
+            <div class="perfundo__image" style="height: {{ $res.Height }}px; width: {{ $res.Width }}px; background-image: url({{ $res.RelPermalink }});"></div>
+            <figcaption>
+                {{ with (.Get "title") -}}
+                    {{ . }}
+                {{- end -}}
+                {{- if or (.Get "caption") (.Get "attr") -}}
+                <p>
+                    {{- .Get "caption" | markdownify -}}
+                    {{- with .Get "attrlink" }}
+                    <a href="{{ . }}">
+                    {{- end -}}
+                    {{- .Get "attr" | markdownify -}}
+                    {{- if .Get "attrlink" }}</a>{{ end }}
+                </p>
+                {{- end }}
+            </figcaption>
+        </figure>
+        <a href="#perfundo-untarget" class="perfundo__close perfundo__control">Close</a>
+    </div>
+    {{ end }}
+</figure>

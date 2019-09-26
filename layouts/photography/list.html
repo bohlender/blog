@@ -1,0 +1,35 @@
+{{ define "content" }}
+    {{ .Content }}
+    <main class="gallery">
+    {{ $res := .Resources.ByType "image" }}
+    {{- range $i, $image := sort $res "Name" "desc" }}
+        {{- $thumb := $image.Resize "600x q70" }}
+        {{- $aspect := div (float $thumb.Width) $thumb.Height }}
+        <figure class="gallery-item
+            {{ if gt $aspect 1.33 -}}
+            horizontal
+            {{- end }}
+            {{- if lt $aspect 0.75 }}
+            vertical
+            {{- end }}
+            ms-thumbnail">
+            <a class="perfundo__link" href="#perfundo-img{{ $i }}">
+                <img src="{{ $thumb.RelPermalink }}">
+            </a>
+        </figure>
+        <div id="perfundo-img{{ $i }}" class="perfundo__overlay">
+            <figure class="perfundo__content perfundo__figure">
+                <!-- <a href="#perfundo-untarget"> -->
+                    <div class="perfundo__image" style="height: {{ $image.Height }}px; width: {{ $image.Width }}px; background-image: url({{ $image.RelPermalink }});"></div>
+                <!-- </a> -->
+            </figure>
+            <a href="#perfundo-untarget" class="perfundo__close perfundo__control">Close</a>
+            <!-- Looping iteration forwards/backwards -->
+            {{ $nextI := mod (add $i 1) (len $res) }}
+            {{ $prevI := cond (lt (sub $i 1) 0) (sub (len $res) 1) (sub $i 1) }}
+            <a class="perfundo__next perfundo__control" href="#perfundo-img{{ $nextI }}">Next</a>
+            <a class="perfundo__prev perfundo__control" href="#perfundo-img{{ $prevI }}">Prev</a>
+        </div>
+    {{- end }}
+    </main>
+{{ end }}

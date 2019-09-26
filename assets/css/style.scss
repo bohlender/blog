@@ -1,0 +1,1084 @@
+$colour1: #f6f4f0;
+$colour2: #35454e;
+$colour3: #b08954;
+$colour4: #4f1225;
+$colour5: #25292c;
+$colour6: #111111;
+
+$colourWork: $colour4;
+$colourPersonal: $colour2;
+
+$stdMargin: 40px;
+
+$tabletWidth: 600px;
+$desktopWidth: 1080px;
+
+$bannerHeight: 300px;
+$notepadMaxWidth: 740px;
+$elemBorderRadius: 5px;
+
+$cvPreContentBg: rgba($colour5, 0.5);
+$cvLeftColMaxWidth: 160px;
+$cvRightColMaxWidth: 680px;
+$cvBorderSpacing: 15px;
+
+//=============================================================================
+// Fonts
+//=============================================================================
+/* lato-regular - latin */
+@font-face {
+	font-family: 'Lato';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Lato Regular'), local('Lato-Regular'),
+		 url('/googlefonts/lato-v16-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+		 url('/googlefonts/lato-v16-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* roboto-slab-regular - latin */
+@font-face {
+	font-family: 'Roboto Slab';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Roboto Slab Regular'), local('RobotoSlab-Regular'),
+		 url('/googlefonts/roboto-slab-v9-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+		 url('/googlefonts/roboto-slab-v9-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* quicksand-regular - latin */
+@font-face {
+	font-family: 'Quicksand';
+	font-style: normal;
+	font-weight: 400;
+	src: local(''),
+		 url('/googlefonts/quicksand-v13-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+		 url('/googlefonts/quicksand-v13-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* roboto-mono-regular - latin */
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/googlefonts/roboto-mono-v7-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Roboto Mono'), local('RobotoMono-Regular'),
+       url('/googlefonts/roboto-mono-v7-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/googlefonts/roboto-mono-v7-latin-regular.woff') format('woff'), /* Modern Browsers */
+}
+
+@mixin headingFont() { font-family: 'Roboto Slab', serif; }
+@mixin articleFont() { font-family: 'Lato', sans-serif; }
+@mixin fancyFont() { font-family: 'Quicksand', sans-serif; }
+@mixin monospaceFont() { font-family: 'Roboto Mono', monospace; }
+
+//=============================================================================
+// Animations
+//=============================================================================
+@keyframes slideDown {
+	from {
+		opacity: 0;
+    	transform: translateY(-1rem);
+  	}
+  	to {
+    	opacity: 1;
+    	transform: translateY(0);
+	}
+}
+
+//=============================================================================
+// Mixins
+//=============================================================================
+@mixin allEase() { transition: all .03s; }
+@mixin noselect() {
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+@mixin hoverLink() {
+	a { position: relative; }
+	
+	a::before {
+		content: "";
+		position: absolute;
+		bottom: -3px;
+		left: 0;
+		right: 0;
+		height: 2px;
+		background-color: $colour4;
+		transform-origin: bottom right;
+		transform: scaleX(0);
+		transition: transform 0.25s ease;
+	}
+
+	a:hover::before {
+		transform-origin: bottom left;
+		transform: scaleX(1);
+	}
+}
+
+@mixin flat-shadow($opacity) { box-shadow: 0 4px 16px 0 rgba(black, $opacity); }
+
+//=============================================================================
+// Base
+//=============================================================================
+
+// Reset defaults & make sizes refer to the bounding box
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+// Default font & font smoothing
+html {
+	@include articleFont();
+	font-size: 16px;
+	line-height: 1.4;
+
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility; // TODO: What for?
+
+	min-height: 100vh;
+	display: flex;
+	flex: column;
+}
+
+// Body is a flex column
+body {
+	// border: 1px solid green;
+	display: flex;
+	flex-direction: column;
+	margin: 0 auto;
+
+	min-width: 0; // reset default "auto" caused by flex
+	width: 100%;
+	min-height: 100vh;
+}
+
+// Takes up all central space (pushes footer to bottom)
+.container {
+	flex: 1 1 auto;
+}
+
+.content {
+	// border: 1px solid red;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	// align-items: center;
+	min-height: 100%;
+	// Graceful degradation for IE10+ (min-height 100% results in empty space)
+	@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {
+		min-height: 0%;
+	}
+	flex-grow: 1;
+	margin: 0 auto;
+	@media screen and(min-width: $desktopWidth) { width: $desktopWidth; }
+}
+
+footer {
+	display: flex;
+	z-index: 1;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	
+	min-height: $stdMargin;
+	// background-image: linear-gradient(rgba(black, 0), $colour6);
+	background-color: $colour6;
+	box-shadow: -5px -5px 15px 10px rgba(0, 0, 0, 0.3);
+	
+	p {
+		color: $colour1;
+		@include fancyFont();
+		font-size: 14px;
+		margin: 0 $stdMargin;
+	}
+}
+
+// Workaround for IE11 not fully supporting <main>
+main { display: block; }
+
+//=============================================================================
+// Standard Elements
+//=============================================================================
+article { margin-bottom: 1em; }
+
+h1, h2, h3, h4, h5, h6 {
+	@include headingFont();
+	font-weight: 300;
+
+	margin: 1.2em 0 0.1em 0;
+	// &:first-child { margin-top: 0;}
+
+	a { color: $colour6; }
+	@include hoverLink();
+}
+h1 { margin-top: 0;}
+
+hr { margin: 0.5em 0; }
+
+p {
+	font-size: 16.4px;
+	line-height: 25px;
+	text-align: justify;
+	margin: 0.8em 0;
+}
+header+p {
+	margin-top: 0.1em;
+}
+
+a {
+	text-decoration: none;
+	color: $colour3;
+
+	// Outline behaviour
+	overflow: hidden;
+	&:active, &:hover { outline: none; }
+}
+
+blockquote {
+	position: relative;
+
+	border-width: 2px 0;
+	border-style: solid;
+	border-color: $colour5;
+
+	padding: 0 1em;
+	margin: 1em 0;
+
+	&:before {
+		content: '\201C';
+		position: absolute;
+		background: white;
+		top: 0rem;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 0.8em;
+
+		font-size: 5em;
+		height: 0.2em;
+		line-height: 70%;
+		color: $colour3;
+		text-align: center;
+	}
+}
+cite {
+	display: block;
+	text-align: right;
+	font-size: 0.875em;
+	&:before { content: "\2015 \ "; }
+}
+
+code {
+	line-height: initial;
+	font-size: 0.90rem;
+	@include monospaceFont();
+}
+
+pre { overflow-x: auto; }
+
+ol, ul {
+	padding-left: 20px;
+	text-align: justify;
+}
+ol { counter-reset: list; }
+ol > li {
+    list-style: none;
+    position: relative;
+}
+ol > li:before {
+    counter-increment: list;
+    content: "(" counter(list, decimal) ") ";
+    position: absolute;
+    left: -1.4em;
+}
+
+//=============================================================================
+// Common classes
+//=============================================================================
+.bg-symbols { background: url("/gfx/pattern-symbols.png") repeat $colour6; }
+.bg-wood { background: url("/gfx/pattern-wood.png") repeat mix($colour5, darken($colour3, 37), 70); }
+.bg-wall { background: url("/gfx/pattern-wall.png") repeat $colour6; }
+.bg-dark { background-color: $colour6; }
+
+.round { border-radius: 31337px; }
+
+.drops-shadow { box-shadow: -5px 10px 15px 10px rgba(0, 0, 0, 0.3); }
+.flat-shadow { box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); }
+
+.tag-block { // KaTeX already uses .tag so we choose a different name
+	background-color: $colour2;
+
+	display: block;
+	color: $colour1;
+
+	padding: 0.05em 0.6em 0.15em;
+	margin: 4px;
+	border-radius: $elemBorderRadius;
+
+	.badge {
+		font-size: 75%;
+		font-weight: 500;
+
+		display: inline-block;
+		border-radius: 4px;
+		border: 1px solid $colour1;
+		padding: 0 0.45em;
+		margin: 0.2em 0.2em 0.2em 0;
+	}
+
+	// Animations
+	@include allEase();
+	&:hover[href] {	transform: scale(1.05);	}
+}
+
+.button {
+	@extend .tag-block;
+	background-color: $colour4;
+}
+
+.metadata {
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+
+	time {
+		@include headingFont();
+		color: $colour3;
+	}
+
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		list-style: none;
+
+		margin-left: 0.7em;
+		padding: 0;
+	}
+}
+
+.source {
+	@extend .tag-block;
+	// margin-left: 0.7em;
+	background-color: $colour5;
+}
+
+.terms-list {
+	display: flex;
+	flex-wrap: wrap;
+	list-style: none;
+	padding: 0;
+	li::before { content: ""; }
+}
+
+.links {
+	font-size: 14px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	
+	margin-top: 5px;
+}
+
+// Rounded corners & left-padding for syntax highlighting
+.highlight {
+	border: 1px solid #ddd;
+	border-bottom-color: #ccc;
+	border-radius: 5px;
+	div, table, pre { border-radius: 5px; }
+	& > pre { padding: 5px; }
+}
+.highlight-figure {
+	border: 1px solid #ddd;
+	border-bottom-color: #ccc;
+	border-radius: 5px;
+	.highlight {
+		border: none;
+		div, table, pre { border-radius: 5px 5px 0 0; }
+	}
+	figcaption {
+		@include headingFont();
+		font-size: 13px;
+		padding: 0.15em 0.3em;
+		text-align: right;
+		background-color:  #f7f7f7;
+		border-radius: 0 0 5px 5px;
+		a { color: $colour5; }
+	}
+}
+
+.icon {	height: 24px; width: 24px; }
+
+// .katex { font-size: 1.2rem !important; } 
+.katex-display { max-width: 100%; }
+.katex-display > .katex > .katex-html {
+    max-width: 100%;
+    overflow-x: visible;
+    overflow-y: hidden;
+}
+
+//=========================================================================
+// Figures
+//=========================================================================
+.figure-outer {	margin: 5px; }
+
+.figure-inner {
+	display: inline-block;
+	position: relative;
+	border-radius: $elemBorderRadius;
+	max-width: 100%;
+
+	img {
+		display: block;
+		max-width: 100%;
+
+		border-radius: $elemBorderRadius;
+	}
+
+	figcaption {
+		display: inline-block;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		border-radius: 0 0 $elemBorderRadius $elemBorderRadius;
+		text-align: right;
+		padding: 5px;
+
+		background: rgba(black, 0.8);
+		color: $colour1;
+
+		p {
+			font-size: 14px;
+			text-align: right;
+			margin: 0;
+		}
+
+		// Animation
+		overflow: hidden;
+		transition: .5s;
+		opacity: 0;
+	}
+
+	&:hover figcaption {
+		opacity: 1;
+	}
+}
+
+.perfundo__figure figcaption {
+	color: $colour1;
+	text-align: center;
+	p {text-align: center;}
+}
+
+.thumbnail-shadow {
+	// Animations
+	@include allEase();
+	&:hover {
+		// transform: scale(1.02);
+		@include flat-shadow(1);
+	}
+}
+
+//=============================================================================
+// Navbar
+//=============================================================================
+header {
+	nav {
+		color: $colour1;
+		@include fancyFont();
+		font-size: 1.1rem;
+		
+		height: 70px;
+		display: flex;
+		position: relative;
+		
+		.selected {	color: $colour1;	}
+		@include hoverLink();
+		
+		input {display: none;}
+
+		.show-menu {
+			cursor: pointer;
+			@include noselect();
+		}
+	}
+	@media screen and (max-width: $tabletWidth){
+		nav{
+			justify-content: flex-end;
+		
+			.dropdown {
+				position: absolute;
+				top: 6px;
+				right: 0;
+				z-index: 2;
+			
+				border-radius: 5px;
+				margin: 10px 20px;
+				padding: 6px;
+			
+				.fa-bars {
+					cursor: pointer;
+					font-size: 24px;
+				}
+			}
+		
+			ul{
+				text-align: right;
+				list-style-type:none;
+				
+				li {
+					display: none;
+					padding: 2px;
+				}
+			}
+		
+			// Show menu when invisible checkbox is checked
+			input[type=checkbox]:checked ~ ul {
+				border-left: 4px solid $colour2;
+				background-color: $colour6;
+				box-shadow: -10px 15px 20px 5px rgba(0, 0, 0, 0.3);
+				li {
+					display: block;
+					animation: slideDown 100ms;
+				}
+			}
+		}
+	}
+	@media screen and (min-width: $tabletWidth){
+		nav {
+			justify-content: center;
+			align-items: center;
+		
+			// Hide dropdown-bars
+			.show-menu { display: none;	}
+		
+			ul {
+				width: $desktopWidth;
+				list-style: none;
+			
+				display: flex;
+				justify-content: flex-end;
+			}
+		
+			li { margin: 0 22px; }
+		}
+	}
+}
+
+//=============================================================================
+// Single pages
+//=============================================================================
+.page {
+	@extend .bg-symbols;
+	color: $colour1;
+	.container { margin: $stdMargin; }
+
+	footer {
+		background-color: transparent;
+		box-shadow: none;
+	}
+
+	h1 {
+		font-size: 36px;
+		color: $colour3;
+		line-height: 1.1;
+		margin: 0.6em 0 0;
+	}
+
+	// Hacky: need proper way
+	blockquote::before { @extend .bg-symbols; }
+}
+
+//=============================================================================
+// Home
+//=============================================================================
+.home {
+	aside {
+		margin: $stdMargin;
+
+		figure {
+			text-align: center;
+			img {
+				max-width: 350px;
+				width: 100%;
+			}
+		}
+	}
+	
+	@media screen and(min-width: $desktopWidth - 200px){
+		display: flex;
+		flex-direction: row-reverse;
+		justify-content: space-around;
+		align-items: center;
+		
+		aside {
+			flex: 1 0 auto;
+			margin-bottom: 25%;
+			position: relative;
+		}
+	}
+	
+	hr {
+		background-color: $colour3;
+		border: none;
+		margin: 0.8rem 0;
+		height: 1px;
+		width: 7rem;
+		text-align: left;
+	}
+
+	p#job {
+		@include headingFont();
+		font-size: 18px;
+		color: $colour1;
+		margin: 0;
+	}
+	div#topics {
+		@include fancyFont();
+		font-size: 24px;
+		color: $colour1;
+		margin-top: 1.5rem;
+	}
+	div#description {
+		@include fancyFont();
+		font-size: 16px;
+		color: $colour1;
+	}
+	
+	.social-list {
+		display: flex;
+		
+		padding: 0;
+		li {
+			list-style: none;
+			margin-right: 1.3rem;
+		}
+
+		// Animations
+		@include allEase();
+		li:hover { transform: scale(1.2); }
+	}
+}
+
+//=============================================================================
+// Blog & Tags
+//=============================================================================
+.blog, .tags {
+	overflow-x: hidden;
+	@extend .bg-wood;
+	header nav {
+		@extend .bg-dark;
+		@extend .drops-shadow;
+	}
+	
+	//=========================================================================
+	// Pagination
+	//=========================================================================
+	.pagination {
+		display: flex;
+		// flex-wrap: wrap;
+		flex-direction: row;
+		justify-content: center;
+
+		.page-item {
+			display: block;
+			margin: 0 5px;
+		}
+
+		.page-link {
+			// border: 1px solid $colour1;
+			border-radius: $elemBorderRadius;
+			padding: 2px 8px 4px;
+
+			&:hover { background-color: $colour1; }
+		}
+
+		.active {
+			.page-link { background-color: $colour1; }
+			a { color: $colour6; }
+		}
+		
+		.disabled {
+			a { color: $colour6; }
+			.page-link { background-color: transparent;}
+		}
+	}
+
+	.attribution {
+		display: block;
+		font-size: 12px;
+		float: right;
+		margin-bottom: -2em;
+	}
+}
+
+.banner {
+//	border: 1px solid red;
+	height: 350px;
+	position: relative;
+	z-index: 1;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+
+	/* Photo by Matt Hoffman on Unsplash */
+	// background: url("../gfx/cup-rss.png") right no-repeat;
+	// background-size: contain;
+
+	margin: $stdMargin/2 0;
+}
+
+.note {
+	@include fancyFont();
+	font-size: 28px;
+	
+	background-color: $colour1;
+	
+	position: absolute;
+	top: -40px;
+	margin: 0 $stdMargin*1.5;
+	
+	width: 286px;
+	height: 140px;;
+	transform: rotate(-12deg);
+	
+	text-align: center;
+	padding-top: 25px;
+	
+	box-shadow: -5px -5px 15px 10px rgba(0,0,0,0.3);
+	
+	a {color: $colour5;}
+}
+
+.notepad-wrapper { position: relative; }
+
+.notepad {
+	@extend .drops-shadow;
+
+	position: relative;
+	max-width: $notepadMaxWidth;
+	background-color: white; // TODO: previously $colour1. stick to it?
+	color: black;
+
+	margin: $stdMargin 0 $stdMargin*2;
+	padding: 20px $stdMargin/2; // TODO: What for?
+
+	&:last-of-type { // Can slide under footer slightly
+		margin-bottom: -15px;
+		padding-bottom: 40px;
+	}
+	
+	border-left: 8px solid $colour2;
+	@media screen and(min-width: $notepadMaxWidth){
+		border-radius: 0 15px 15px 0;
+		border-left-width: 20px;
+
+		padding: 20px $stdMargin;
+	}
+	
+	// h1 { font-size: 42px; }
+	h1 { font-size: 2em; }
+	
+
+	.summary {
+		background-color: red;
+	}
+
+	aside {
+		display: block;
+		width: 100%;
+
+		border-radius: 0;
+		border: none;
+		border-bottom: 1px solid $colour4;
+		border-top: 1px solid $colour4;
+
+		position: inherit;
+		margin: 0.5em 0;
+		padding: 0;
+
+		box-shadow: none;
+		
+		p {
+			font-size: 14px;
+			line-height: 22px;
+		}
+		
+		@media screen and(min-width: $desktopWidth) {
+			position: absolute;
+			width: 340px;
+			left: $notepadMaxWidth - 20px;
+			transform: translate(0%,-50%);
+			
+			background-color: white;
+			
+			border: none;
+			border-left: 20px solid $colour4;
+			border-radius: 0 10px 10px 0;
+			
+			margin: 0;
+			padding: 0 $stdMargin/2;
+		
+			box-shadow: 4px 15px 20px 5px rgba(0, 0, 0, 0.3);
+		}
+	}
+}
+.related-posts { border-color:$colour4; }
+
+//=============================================================================
+// CV
+//=============================================================================
+.cv {
+	@extend .bg-symbols;
+	color: $colour1;
+	footer {
+		background-color: transparent;
+		box-shadow: none;
+	}
+	nav { background-color: $cvPreContentBg; }
+
+	// Disable min-content size since we inject pre-content
+	.content {min-height: initial;}
+
+	.intro {
+		background-color: $cvPreContentBg;
+		padding: 10px $cvBorderSpacing;
+
+		.wrapper {
+			max-width: 600px;
+			margin: 0 auto;
+		}
+	}
+
+	// The trickery is needed to make preserveAspectRatio behave properly in IE11
+	.divider {
+		position: relative;
+		overflow: hidden;
+		canvas { display: block; width: 100%; }
+		svg {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+
+			.p1 { fill: $cvPreContentBg; }
+			.p2 {
+				fill: $colour4;
+				filter: drop-shadow(0px 12px 8px rgba(black, 0.6));
+			}
+		}
+	}
+	
+	h1, h2 {
+		font-size: 24px;
+		color: $colour2;
+		margin: 0.5em 0 0;
+		a { color: $colour2; }
+	}
+	.top-h1 {
+		font-size: 36px;
+		color: $colour3;
+	}
+	
+	.h1-block {
+		background-color: $colour2;
+		width: 100%;
+		height: 18px;
+	}
+
+	.timeline {
+		display: table;
+		margin: 0 auto $stdMargin/2;
+		border-spacing: $cvBorderSpacing;
+		align-self: center;
+		
+		.cell { display: table-cell; }
+	}
+
+	.heading { display: table-row; }
+	
+	.entry {
+		display: table-row;
+		margin-top: 0;
+		
+		.when {
+			display: table-cell;
+			position: relative;
+			@include headingFont();
+			font-size: 18px;
+			color: $colour3;
+
+			max-width: $cvLeftColMaxWidth;
+			text-align: right;
+
+			padding-right: 15px;
+			border-right: 4px solid $colour4;
+		}
+		
+		.description {
+			display: table-cell;
+
+			max-width: $cvRightColMaxWidth;
+			margin-left: 15px;
+
+			.title {
+				@include headingFont();
+				font-size: 18px;
+				color: $colour3;
+			}
+			
+			.subtitle {
+				font-size: 14px;
+				color: $colour3;
+			}
+
+			p:last-of-type { margin-bottom: 0px; }
+		}
+	}
+}
+//=============================================================================
+// Projects
+//=============================================================================
+.projects {
+	@extend .bg-symbols;
+	color: $colour1;
+	footer {
+		background-color: transparent;
+		box-shadow: none;
+	}
+	main > header { margin: $stdMargin/2 + 8px; }
+	article {
+		header { margin: 0 $stdMargin/2; }
+		border-left-width: 8px;
+		border-left-style: solid;
+	}
+	h1 { color: $colour3; }
+	h2 a { color: $colour1; }
+
+	.flex-wrapper {
+		display: flex;
+		flex-wrap: wrap;
+		padding: 0 $stdMargin/2;
+	}
+	.project-description {
+		max-width: $tabletWidth;
+		flex: 3 1 $tabletWidth - 300px;
+	}
+}
+
+.figures {
+	flex: 1 1 300px;
+	margin: 0 auto;
+	overflow: visible; 
+
+	figure {
+		display: block; // IE11 fix
+		margin: $stdMargin/2;
+		text-align: center;
+		img {
+			max-width: 100%;
+			border-radius: $elemBorderRadius;
+			@include flat-shadow(0.6);
+		}
+
+	}
+}
+
+.work { border-color: $colourWork; }
+.personal {	border-color: $colourPersonal; }
+
+//=============================================================================
+// Photography
+//=============================================================================
+.photography {
+	@extend .bg-wall;
+	color: $colour1;
+	footer {
+		background-color: transparent;
+		box-shadow: none;
+	}
+	nav {
+		@extend .bg-dark;
+		@extend .drops-shadow;
+	}
+
+	.container { margin: $stdMargin/2; }
+}
+
+.gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	grid-template-rows: repeat(auto-fit, minmax(120px, 240px));
+	grid-gap: 20px;
+	grid-auto-flow: dense;
+
+	.gallery-item {
+		@include flat-shadow(0.5);
+		img {
+			border-radius: $elemBorderRadius;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		// Additional filler
+		&:nth-of-type(5n) {
+			grid-row: span 1;
+			grid-column: span 1;
+		}
+
+		// Animations
+		@include allEase();
+		&:hover {
+			transform: scale(1.02);
+			@include flat-shadow(1);
+		}
+	}
+
+	.vertical {
+		grid-column: span 1;
+		grid-row: span 2;
+	}
+	.horizontal {
+		grid-column: span 2;
+		grid-row: span 1;
+	}
+}
+
+// IE10+ specific variant of gallery
+@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) {  
+	.gallery {
+		display: flex;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: center;
+
+		.gallery-item {
+			position: relative;
+			width: 250px;
+			height: 250px;
+			overflow: hidden;
+
+			margin: 10px;
+			border-radius: $elemBorderRadius;
+
+			img {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				width: inherit;
+				height: inherit;
+				min-height: 100%;
+				min-width: 100%;
+				transform: translate(-50%,-50%);
+			}
+		}
+	}
+}

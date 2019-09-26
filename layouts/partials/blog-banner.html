@@ -1,0 +1,14 @@
+{{- with $.Site.GetPage "/blog" }}
+{{- with .OutputFormats.Get "rss" -}}
+<div class="banner">
+	<!-- Photo by Matt Hoffman on Unsplash -->
+    <!-- <img src="/gfx/cup.png" style="z-index: -1; position: absolute; max-width: 100%; object-fit: contain"/> -->
+    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="443" height="350" viewBox="0 0 443 350">
+        <image xlink:href="/gfx/cup-rss.png" width="443" height="350"/>
+        <a href="{{ .Permalink }}" target="_top">
+            <circle style="fill: transparent" cx="187" cy="165" r="110"/>
+        </a>
+    </svg>
+</div>
+{{- end }}
+{{- end }}

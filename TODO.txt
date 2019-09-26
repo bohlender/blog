@@ -1,0 +1,38 @@
+- Temporary 404 page
+- Add sitemap to robots.txt
+
+- Proper 404 page
+  - Trainer Scroller?
+  - flickering nixie tubes? 0.00404 -- the requested page does not exist in this timeline
+  - doom font 404 & fire effect?
+  - morsecode?
+  - https://www.reddit.com/r/VaporwaveAesthetics/comments/cu79m4/maintenance_is_being_preformed/?)
+  - Outrun/synthwavey parallax scrolling with 404-sun?
+
+
+Nice to have
+============
+- Fix tag padding-top being off in _some_ versions of IE11
+- Custom syntax highlighting theme (matching the site's colours)
+- Favicon / Logo
+- Let pagination link to latest-posts#title ?
+- Table of contents in (longer) posts, e.g. if #sections>2 ?
+
+- Proper SMTLIB syntax highlighting (add to chroma)
+- Close lightbox on Esc? Needs JS :/
+- Tweak look for HighDPI ?
+- Make template-generated source readable
+- Refactor CSS ¯\_(ツ)_/¯
+
+- Get rid of KaTeX JS -- branch hugo & prerender math
+- Better images than the portrait for opengraph
+- Use schema.org microdata to alter the appearance of search engine results
+
+- Report bug/inconsistency:
+  - .Site.Title is not an alias of .Site.Params.title but templates refer to both
+  - .Site.Title in RSS template
+  - .Site.Params.title in opengraph template
+
+Unlikely
+========
+- Twitter cards -- similar to opengraph data ? Needs Twitter account for approval :/

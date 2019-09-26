@@ -1,0 +1,66 @@
+{{ define "pre-content" }}
+<div class="intro">
+    <div class="wrapper">
+        <h1 class="top-h1" id="{{ .Title | anchorize }}">{{ .Title }}</h1>
+        {{ .Content }}
+    </div>
+</div>
+<div class="divider">
+    <canvas width="1600" height="180"></canvas>
+    <svg preserveAspectRatio="xMidYMin meet" viewBox="0 0 1600 180" >
+        <polygon class="p1" points="1604,144 1604,0 -4,0 -4,0"></polygon>
+        <polygon class="p2" points="1604,160 1604,144 -4,0 -4,50"></polygon>
+    </svg>
+</div>
+{{ end }}
+
+{{ define "content"}}
+<main class="timeline">
+    <!-- Insert heading for every section -->
+    {{ range .Site.Params.cvSections }} <!-- Hacky range since (.Pages.GroupByParam "section") can't be sorted -->
+        <div class="heading">
+            <div class="cell"><div class="h1-block"></div></div>
+            <h1 id="{{ .name | anchorize }}"><a href="#{{ .name | anchorize }}">{{ .name }}</a></h1>
+        </div>
+        <!-- Insert heading for every subsection (or none if at top) -->
+        {{ $pagesInSection := where $.Pages "Params.section" .name }}
+        {{- range $pagesInSection.GroupByParam "subsection" }}
+            {{- if .Key }}
+            <div class="heading">
+                <div class="cell"></div>
+                <h2 id="{{ .Key | anchorize }}"><a href="#{{ .Key | anchorize }}">{{ .Key }}</a></h2>
+            </div>
+            {{- end }}
+            <!-- The actual CV entires in the current section/subsection -->
+            {{- range .Pages }}
+            <div class="entry">
+                {{ if .Params.in }}
+                    <div class="when">{{ .Params.in | markdownify }} </div>
+                {{ else }}
+                    <div class="when">{{ dateFormat "2006" .Params.date }} </div>
+                {{ end }}
+                <div class="description">
+                    <div class="title">{{ .Title | markdownify }}</div>
+                    <div class="subtitle">{{ .Params.subtitle | markdownify }}</div>
+                    {{ .Content }}
+                    {{ $res := .Resources }}
+                    {{- with .Params.links}}
+                    <div class="links">
+                        {{- range . }}
+                            {{ $curLink := . }}
+                            <!-- Treat .url as link to a resource (if matching) -->
+                            {{- with ($res.GetMatch .url) }}
+                                <a href="{{ .RelPermalink }}" class="button">{{ $curLink.name }}</a>
+                            {{ else }}
+                                <a href="{{ .url }}" class="button">{{ .name }}</a>
+                            {{- end }}
+                        {{- end }}
+                    </div>
+                    {{- end }}
+                </div>
+            </div>
+            {{- end }}
+        {{- end }}
+    {{- end }}
+</main>
+{{ end }}

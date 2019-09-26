@@ -1,0 +1,26 @@
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<!-- Style -->
+	{{- $options := (dict "outputStyle" "compressed") }}
+	{{- $style := resources.Get "css/style.scss" | resources.ToCSS $options }}
+	{{- $perfundo := resources.Get "/css/perfundo.with-icons.css" | resources.Minify }}
+	<link rel="stylesheet" href="{{ $style.RelPermalink }}">
+	<link rel="stylesheet" href="{{ $perfundo.RelPermalink }}">
+	<!-- Math renderer (if required by page) -->
+	{{- if .Params.math }}
+	{{- partial "tex-renderer" }}
+	{{- end }}
+	<!-- Feed of blog -->
+	{{- with .Site.GetPage "/blog" }}
+		{{- with .OutputFormats.Get "rss" -}}
+		    {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
+		{{- end }}
+	{{- end }}
+	<!-- Open Graph metadata -->
+	{{ partial "opengraph" . }}
+	<!-- Title -->
+	{{- $title := cond .IsHome (.Site.Title) (print .Title " | " .Site.Title) }}
+	<title>{{ $title }}</title>
+</head>

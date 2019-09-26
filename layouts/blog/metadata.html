@@ -1,0 +1,12 @@
+<div class="metadata">
+    {{- $dateTime := .PublishDate.Format "2006-01-02" }}
+    <time datetime="{{ $dateTime }}">{{ .PublishDate.Format .Site.Params.dateFormat }}</time>
+    {{- with .Params.tags }}
+    <ul>
+    {{- range . }}
+        {{- $href := print "/tags/" (urlize .) }}
+        <li><a class="tag-block" href="{{ $href }}">{{ . }}</a></li>
+    {{- end }}
+    </ul>
+    {{- end }}
+</div>

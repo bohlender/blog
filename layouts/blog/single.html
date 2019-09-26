@@ -1,0 +1,27 @@
+{{ define "content"}}
+{{ partial "blog-banner" . }}
+<div class="notepad-wrapper">
+	<!-- The notebook cannot be <main> since notepad:last-of-type distinguishes <div> & <main> -->
+	<div class="notepad">
+		<main>
+		<article>
+			<header>
+				<!-- <h1 id="{{ .File.ContentBaseName }}"><a href="{{ .Permalink }}#{{ .File.ContentBaseName }}">{{ .Title }}</a></h1> -->
+				<h1>{{ .Title }}</h1>
+				{{ .Render "metadata" }}
+			</header>
+			{{ partial "headline-link" .Content}}
+		</article>
+		</main>
+	</div>
+	{{ with .Site.RegularPages.Related . | first 3}}
+	<div class="notepad related-posts">
+		<h1>Related Posts</h1>
+		<hr>
+		{{ range . }}
+			{{ .Render "summary" }}
+		{{ end }}
+	</div>
+	{{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,78 @@
+baseURL = "https://bohlender.github.io/"
+languageCode = "en-gb"
+title = "Dimitri Bohlender"
+copyright = "© Dimitri Bohlender"
+
+pygmentsCodefences = true
+pygmentsStyle = "monokai"
+paginate = 5
+
+[author]
+  name = "Dimitri Bohlender"
+  email = "contact@bohlender.pro"
+
+[params]
+  description = "Both a portfolio and outlet for all things creative"
+  dateFormat = "January 2, 2006"
+
+	[params.homepage]
+		portrait = "/portrait.jpg"
+		job = "Research Associate"
+		topics = ["Formal Methods", "Modelling & Verification"]
+		description = ["I am a PhD candidate in Computer Science at Informatik 11 - Embedded Software, RWTH Aachen University, and about to finish it in 2020.",
+                   "Since I value authenticity, this site serves as both a portfolio and a personal website."]
+  [params.blog]
+    description = "Thoughts on formal methods, computer science, art & society"
+  [[params.cvSections]]
+    name = "Education"
+    weight = 1
+  [[params.cvSections]]
+    name = "Work Experience"
+    weight = 2
+  [[params.cvSections]]
+    name = "Publications"
+    weight = 3
+
+[social]
+		github = "https://github.com/bohlender"
+		facebook = "https://facebook.com/balddenimhero"
+		lastfm = "https://www.last.fm/user/yourdecay"
+
+[menu]
+  [[menu.main]]
+    name = "Home"
+    url = "/"
+    weight = 1
+  [[menu.main]]
+    name = "CV"
+    url = "/cv/"
+    weight = 2
+  [[menu.main]]
+    name = "Blog"
+    url = "/blog/"
+    weight = 4
+  [[menu.main]]
+    name = "Projects"
+    url = "/projects/"
+    weight = 3
+  [[menu.main]]
+    name = "Photography"
+    url = "/photography/"
+    weight = 5
+
+[taxonomies]
+  tag = "tags"
+
+[related]
+  threshold = 80
+  includeNewer = true
+  toLower = true
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "date"
+    weight = 10
+
+[imaging]
+resampleFilter = "Lanczos"

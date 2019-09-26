@@ -1,0 +1,25 @@
+
+[[articles]]
+link = '''https://artificial-mind.net/blog/2019/09/22/delete-your-rvalue-ref-assignments'''
+title = '''Consider deleting your rvalue ref-qualified assignment operators'''
+summary = '''Why is foo{} = foo{} working anyways?'''
+sourceLink = '''https://artificial-mind.net/'''
+sourceTitle = '''artificial::mind'''
+date = '''September 22, 2019'''
+[[articles]]
+link = '''https://zipcpu.com/quiz/2019/09/06/quiz06.html'''
+title = '''Quiz #6: Synchronous logic in Asynchronous contexts'''
+summary = '''This quiz is really intended for the open version of SymbiYosys.  The
+open Yosys doesn’t quite implement $global_clock properly.  According to
+the SystemVerilog standard, $global_clock is supposed to be a clock
+chosen by the designer to be the default clock …'''
+sourceLink = '''https://zipcpu.com/'''
+sourceTitle = '''The ZipCPU by Gisselquist Technology'''
+date = '''September 6, 2019'''
+[[articles]]
+link = '''https://yurichev.com/blog/SAT_WL/'''
+title = '''SAT solver in Python (~175 SLOC) with watch lists'''
+summary = '''SAT solver in Python (~175 SLOC) with watch lists'''
+sourceLink = '''https://yurichev.com/blog/'''
+sourceTitle = '''Dennis Yurichev'''
+date = '''September 4, 2019'''
