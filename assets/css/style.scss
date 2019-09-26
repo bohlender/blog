@@ -413,6 +413,10 @@ ol > li:before {
 }
 
 .icon {	height: 24px; width: 24px; }
+.read-more {
+	display: block;
+	text-align: right;
+}
 
 // .katex { font-size: 1.2rem !important; } 
 .katex-display { max-width: 100%; }
