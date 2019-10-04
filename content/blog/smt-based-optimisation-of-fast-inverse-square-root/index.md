@@ -209,7 +209,7 @@ To determine whether the characterised functions actually compute the expected v
 ```
 
 However, all these assertions do is evaluate whether applying various functions to the values picked by the solver for `f` and `b` yields the expected values.
-Instead of adding these unnecessary assertions, making it harder for the solver to find a solution, it is more appropriate to use Z3's `eval` command, to do these evaluations _after_ `check-sat`:
+Instead of adding these unnecessary assertions, and making it harder for the solver to find a solution, it is more appropriate to use Z3's `eval` command, to do these evaluations _after_ `check-sat`:
 
 ```Scheme
 (eval (= f ((_ to_fp 8 24) #x016EB3C0))) ; f = (float)0x016EB3C0
@@ -315,7 +315,7 @@ Unfortunately this machinery does not support floating-point constraints, which 
 
 A possible refinement sequence is evaluated in [`invsqrt.smt2`](invsqrt.smt2), outputting the following:
 
-{{< highlight-file "invsqrt.log" zsh 45 80 >}}
+{{< highlight-file "invsqrt.log" zsh 56 91 >}}
 
 Unlike the previous constraints, these checks take a while (**hours**), but eventually **prove the maximum relative error to be `0x3AE5B000`** (~0.00175237).
 This matches the results of our [brute force search](maxRelErr.c).
@@ -351,9 +351,9 @@ Since all [free constants](https://en.wikipedia.org/wiki/Free_variables_and_boun
 
 Using these constraints, and the initial bound 0.001752, Z3 will output the following for the refinement sequence chosen in our [SMT-LIB script](invsqrt.smt2):
 
-{{< highlight-file "invsqrt.log" zsh 82 >}}
+{{< highlight-file "invsqrt.log" zsh 93 >}}
 
-Solving these instances takes about **two days** on an i5-4210M, but Z3 eventually determines that the `magic` constant `0x5f375a81` achieves a maximum relative error of `0x3ae58c00` (~0.0017513).
+Solving these instances takes about **two days** on an i5-4210M, but Z3 (v4.8.5) eventually determines that the `magic` constant `0x5f375a81` achieves a maximum relative error of `0x3ae58c00` (~0.0017513).
 Furthermore, we find that **no constant can achieve an even lower maximum relative error**.
 
 ## Do Try This at Home!
