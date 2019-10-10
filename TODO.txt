@@ -1,3 +1,5 @@
+- https://validator.w3.org/
+- Icons not showing up in FF 69.0.2 on SurfaceBook2 (but everywhere else)
 - Temporary 404 page
 
 - Proper 404 page
