@@ -7,4 +7,6 @@ in: "DEDS 2020"
 section: "Publications"
 subsection: ""
 links:
+- name: "Preprint"
+  url: "preprint.pdf"
 ---

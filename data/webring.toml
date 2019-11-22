@@ -1,29 +1,27 @@
 
 [[articles]]
-link = '''https://artificial-mind.net/blog/2019/10/24/pytorch-cpp'''
-title = '''PyTorch Setup (C&#43;&#43;17, zapcc, QtCreator, Debian, user-space)'''
-summary = '''Harder than it should be.'''
-sourceLink = '''https://artificial-mind.net/'''
-sourceTitle = '''artificial::mind'''
-date = '''October 24, 2019'''
-[[articles]]
-link = '''https://yurichev.com/blog/bak/'''
-title = '''[Linux] Simplest possible snapshot-style backups using rsync'''
-summary = '''[Linux] Simplest possible snapshot-style backups using rsync'''
+link = '''https://yurichev.com/blog/RE4B-IT/'''
+title = '''Reverse Engineering for Beginners in Italian'''
+summary = '''Reverse Engineering for Beginners in Italian'''
 sourceLink = '''https://yurichev.com/blog/'''
 sourceTitle = '''Dennis Yurichev'''
-date = '''October 16, 2019'''
+date = '''November 21, 2019'''
 [[articles]]
-link = '''https://zipcpu.com/formal/2019/10/05/formal-enough.html'''
-title = '''Is formal verfication enough, or is simulation required?'''
-summary = '''
+link = '''https://zipcpu.com/formal/2019/11/18/genuctrlr.html'''
+title = '''Formally Verifying a General Purpose Ultra-Micro Controller'''
+summary = '''At long last, I have formally verified a DDR3 SDRAM
+controller.  Sadly,
+I haven’t yet had the time to verify its operation on real hardware.
+Worse, the I/O isn’t quite there yet so I don’t expect it will work … yet.
 
-While at ORCONF this past weekend, several folks asked
-me to what extent I used
-formal methods.
-Since I found myself answering this question with some stories from my own
-experiences that I had yet to blog about, I thought I’d write
-them down and share them he…'''
+For those who don’t know the story, I built…'''
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
-date = '''October 5, 2019'''
+date = '''November 18, 2019'''
+[[articles]]
+link = '''https://blog.regehr.org/archives/1700'''
+title = '''Helping Generative Fuzzers Avoid Looking Only Where the Light is Good, Part 1'''
+summary = '''Let’s take a second to recall this old joke: A policeman sees a drunk man searching for something under a streetlight and asks what the drunk has lost. He says he lost his keys and they both look under the streetlight together. After a few minutes the pol…'''
+sourceLink = '''https://blog.regehr.org'''
+sourceTitle = '''Embedded in Academia'''
+date = '''November 4, 2019'''
