@@ -1,23 +1,22 @@
 
 [[articles]]
-link = '''https://yurichev.com/blog/RE4B-IT/'''
-title = '''Reverse Engineering for Beginners in Italian'''
-summary = '''Reverse Engineering for Beginners in Italian'''
-sourceLink = '''https://yurichev.com/blog/'''
-sourceTitle = '''Dennis Yurichev'''
-date = '''November 21, 2019'''
-[[articles]]
-link = '''https://zipcpu.com/formal/2019/11/18/genuctrlr.html'''
-title = '''Formally Verifying a General Purpose Ultra-Micro Controller'''
-summary = '''At long last, I have formally verified a DDR3 SDRAM
-controller.  Sadly,
-I haven’t yet had the time to verify its operation on real hardware.
-Worse, the I/O isn’t quite there yet so I don’t expect it will work … yet.
-
-For those who don’t know the story, I built…'''
+link = '''https://zipcpu.com/zipcpu/2019/11/23/multithreaded-blinky.html'''
+title = '''The ZipCPU meets blinky'''
+summary = '''If you’ve never heard of “blinky” before, it’s the name given to a piece of
+software or even an FPGA design that simply blinks an LED.  We’ve discussed
+building blinky before,
+as well the more advanced (but no less fun) project
+of moving an active LED back an…'''
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
-date = '''November 18, 2019'''
+date = '''November 23, 2019'''
+[[articles]]
+link = '''https://yurichev.com/blog/qsort/'''
+title = '''Yet another explanation of the Quicksort algorithm'''
+summary = '''Yet another explanation of the Quicksort algorithm'''
+sourceLink = '''https://yurichev.com/blog/'''
+sourceTitle = '''Dennis Yurichev'''
+date = '''November 23, 2019'''
 [[articles]]
 link = '''https://blog.regehr.org/archives/1700'''
 title = '''Helping Generative Fuzzers Avoid Looking Only Where the Light is Good, Part 1'''
