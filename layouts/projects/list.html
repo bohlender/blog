@@ -24,7 +24,7 @@
             </header>
             <div class="flex-wrapper">
                 <div class="project-description">
-                    {{ .Content | markdownify }}
+                    {{ .Content }}
                 </div>
                 {{ with .Resources.ByType "image" }}
                 <div class="figures">
