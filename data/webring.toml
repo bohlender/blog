@@ -1,15 +1,14 @@
 
 [[articles]]
-link = '''https://zipcpu.com/zipcpu/2019/11/23/multithreaded-blinky.html'''
-title = '''The ZipCPU meets blinky'''
-summary = '''If you’ve never heard of “blinky” before, it’s the name given to a piece of
-software or even an FPGA design that simply blinks an LED.  We’ve discussed
-building blinky before,
-as well the more advanced (but no less fun) project
-of moving an active LED back an…'''
+link = '''https://zipcpu.com/quiz/2019/11/29/quiz08.html'''
+title = '''Quiz #8: Will this pass a bounded model check?'''
+summary = '''
+
+As always, if you are unsure, I would encourage you to try this proof yourself.
+'''
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
-date = '''November 23, 2019'''
+date = '''November 29, 2019'''
 [[articles]]
 link = '''https://yurichev.com/blog/qsort/'''
 title = '''Yet another explanation of the Quicksort algorithm'''
