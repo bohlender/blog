@@ -2,11 +2,13 @@
 {{ $srcLow := (.Get "src") }}
 {{ $needsLb := false }}
 {{ $res := .Page.Resources.GetMatch $srcHigh }}
+{{ if ne $res.MediaType.SubType "svg" }}
 {{ if (and $res (gt $res.Width 650) )}}
     {{ $width := (.Get "width") | default 650 | int }}
     {{ $resizeOption := printf "%dx" $width }}
     {{ $srcLow = ($res.Resize $resizeOption).RelPermalink }}
     {{ $needsLb = true }}
+{{ end }}
 {{ end }}
 <!-- 1) Some nesting is needed to align figcaption with img in all cases -->
 <!-- 2) The figure-nesting is needed (div doesn't work) to prevent their disappearing in ffox reader view -->

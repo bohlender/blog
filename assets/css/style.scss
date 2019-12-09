@@ -429,7 +429,10 @@ ol > li:before {
 //=========================================================================
 // Figures
 //=========================================================================
-.figure-outer {	margin: 5px; }
+.figure-outer {
+	margin: 5px;
+	text-align: center;
+}
 
 .figure-inner {
 	display: inline-block;

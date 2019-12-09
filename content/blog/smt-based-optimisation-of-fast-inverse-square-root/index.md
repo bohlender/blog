@@ -1,6 +1,7 @@
 ---
 title: "SMT-based Reasoning About the Fast Inverse Square Root"
 date: 2019-09-12T09:31:28+02:00
+publishDate: 2019-09-26
 tags: ["SMT", "SMT-LIB", "Software Verification"]
 draft: false
 math: true
