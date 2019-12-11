@@ -38,7 +38,6 @@ def f_constraints(f):
     return asserts
 
 def encode(num_inputs, outputs, num_inner_gates):
-    print("#inputs: {:d}, #gates: {:d}".format(num_inputs, num_inner_gates))
     # Create variables (and values for inputs) for each x_i
     x = [Bool("x{:d}".format(gate_idx)) for gate_idx in range(num_inputs + num_inner_gates)]
 
@@ -57,10 +56,10 @@ def encode(num_inputs, outputs, num_inner_gates):
 def main():
     print("Using {}".format(z3.get_full_version()))
     # Full adder example (impossible with 8 restricted gates; possible with 9)
-    # sum = lambda inputs: Xor(Xor(inputs[0], inputs[1]), inputs[2])
-    # carry = lambda inputs: Or(And(inputs[0], inputs[1]), And(Xor(inputs[0], inputs[1]), inputs[2]))
-    # outputs = [sum, carry]
-    # Original puzzle
+    sum = lambda inputs: Xor(Xor(inputs[0], inputs[1]), inputs[2])
+    carry = lambda inputs: Or(And(inputs[0], inputs[1]), And(Xor(inputs[0], inputs[1]), inputs[2]))
+    outputs = [sum, carry]
+    # Original puzzle (possible with 27 gates)
     g0 = lambda inputs: Not(inputs[0])
     g1 = lambda inputs: Not(inputs[1])
     g2 = lambda inputs: Not(inputs[2])
