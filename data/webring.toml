@@ -1,12 +1,5 @@
 
 [[articles]]
-link = '''https://yurichev.com/news/20191212_progcalc/'''
-title = '''Programmer&#39;s calculator'''
-summary = '''Programmer&#39;s calculator'''
-sourceLink = '''https://yurichev.com/blog/'''
-sourceTitle = '''Dennis Yurichev'''
-date = '''December 12, 2019'''
-[[articles]]
 link = '''https://zipcpu.com/quiz/2019/11/29/quiz08.html'''
 title = '''Quiz #8: Will this pass a bounded model check?'''
 summary = '''
@@ -23,3 +16,10 @@ summary = '''Let’s take a second to recall this old joke: A policeman sees a d
 sourceLink = '''https://blog.regehr.org'''
 sourceTitle = '''Embedded in Academia'''
 date = '''November 4, 2019'''
+[[articles]]
+link = '''https://artificial-mind.net/blog/2019/10/24/pytorch-cpp'''
+title = '''PyTorch Setup (C&#43;&#43;17, zapcc, QtCreator, Debian, user-space)'''
+summary = '''Harder than it should be.'''
+sourceLink = '''https://artificial-mind.net/'''
+sourceTitle = '''artificial::mind'''
+date = '''October 24, 2019'''
