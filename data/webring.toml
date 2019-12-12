@@ -1,5 +1,12 @@
 
 [[articles]]
+link = '''https://yurichev.com/news/20191212_progcalc/'''
+title = '''Programmer&#39;s calculator'''
+summary = '''Programmer&#39;s calculator'''
+sourceLink = '''https://yurichev.com/blog/'''
+sourceTitle = '''Dennis Yurichev'''
+date = '''December 12, 2019'''
+[[articles]]
 link = '''https://zipcpu.com/quiz/2019/11/29/quiz08.html'''
 title = '''Quiz #8: Will this pass a bounded model check?'''
 summary = '''
@@ -9,13 +16,6 @@ As always, if you are unsure, I would encourage you to try this proof yourself.
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
 date = '''November 29, 2019'''
-[[articles]]
-link = '''https://yurichev.com/blog/qsort/'''
-title = '''Yet another explanation of the Quicksort algorithm'''
-summary = '''Yet another explanation of the Quicksort algorithm'''
-sourceLink = '''https://yurichev.com/blog/'''
-sourceTitle = '''Dennis Yurichev'''
-date = '''November 23, 2019'''
 [[articles]]
 link = '''https://blog.regehr.org/archives/1700'''
 title = '''Helping Generative Fuzzers Avoid Looking Only Where the Light is Good, Part 1'''
