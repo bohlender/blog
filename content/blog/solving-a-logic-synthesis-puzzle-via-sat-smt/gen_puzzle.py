@@ -85,12 +85,12 @@ def encode(num_inputs, outputs, num_inner_gates):
 
 def main():
     print("Using {}".format(z3.get_full_version()))
-    # Original puzzle (possible with 27 gates)
+    # Original puzzle (possible with 22 gates)
     g0 = lambda inputs: Not(inputs[0])
     g1 = lambda inputs: Not(inputs[1])
     g2 = lambda inputs: Not(inputs[2])
     outputs = [g0, g1, g2]
-    dimacs = encode(3, outputs, 27)
+    dimacs = encode(3, outputs, 22)
     with open("dump.cnf", 'w') as writer:
         writer.write(dimacs)
 

@@ -356,19 +356,19 @@ In particular, $g_2$ can certainly be computed independently of $g_1$ and $g_0$.
 We can enforce these connections via:
 {{< highlight-file "gen_puzzle.py" Python 16 18 >}}
 
-With these additional constraints, it [took my machine 1,5h](puzzle.log) to solve the [corresponding SAT instance](puzzle.cnf) with 27 inner gates.
+With these additional constraints, it took an old i5-4690 CPU [about 15min](puzzle.log) to solve the [corresponding SAT instance](puzzle.cnf) with **22 inner gates**.
 The synthesised circuit looks as follows:
 {{< figure src="gfx/puzzle.svg" title="Solution to puzzle" >}}
 Since we only allow gates with fan-in 2, here, the NOT2 denotes a NOT on the second input.
 
 ## Do Try This at Home!
-Although the SAT-based characterisation of logic synthesis turns out to be practically useful, especially when the artificial constrain on the number of gates is dropped, there is still room for improvement and experimentation.
+Although the SAT-based characterisation of logic synthesis turns out to be practical -- especially when the artificial constraint on the number of gates is dropped -- there is still room for improvement and experimentation.
 Here are some ideas that you might want to explore on your own (easiest first):
 
 * Instead of relying on an external solver to solve the generated constraints, use the API to invoke the check programmatically.
 * Automate the interpretation of the solutions found by a solver as logic circuits and plot them via [DOT](https://en.wikipedia.org/wiki/DOT_(graph_description_language)).
 * Extend the characterisation to allow some composite gates.
-  For example, the [accepted solution](https://puzzling.stackexchange.com/questions/9438/invert-three-inputs-with-two-not-gates) has circuitry to decide whether more than $1$ (or more than $2$) inputs are $\mathit{true}$.
+  For example, I found that the [expected solution](https://puzzling.stackexchange.com/questions/9438/invert-three-inputs-with-two-not-gates) has circuitry to decide whether more than one (or more than two) inputs are $\mathit{true}$.
   Requiring the synthesis to feature such blocks may speed up the synthesis of the puzzle's solution.
 * Instead of characterising the circuit for a fixed number of gates, devise an incremental variant of SMT-based or SAT-based synthesis.
   It should be advantageous to have the solver reuse information established during checks with fewer gates.
