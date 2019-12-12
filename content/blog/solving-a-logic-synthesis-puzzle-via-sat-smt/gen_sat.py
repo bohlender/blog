@@ -30,8 +30,8 @@ def gate_connections(num_inputs, x, f):
                         expr = Implies(And(conn_var,
                                            x[in1_idx][input_idx] == gate_input_bits[0],
                                            x[in2_idx][input_idx] == gate_input_bits[1],
-                                           f[gate_idx - num_inputs][gate_input_idx] == gate_out),
-                                       x[gate_idx][input_idx] == gate_out)
+                                           x[gate_idx][input_idx] == gate_out),
+                                       f[gate_idx - num_inputs][gate_input_idx] == gate_out)
                         asserts.append(expr)
         asserts.append(Or(conn_vars))
     return asserts
@@ -39,7 +39,7 @@ def gate_connections(num_inputs, x, f):
 def f_constraints(f):
     is_and = lambda gate: And(Not(gate[0]), Not(gate[1]), Not(gate[2]), gate[3])
     is_or = lambda gate: And(Not(gate[0]), gate[1], gate[2], gate[3])
-    is_not = lambda gate: And(gate[0], gate[1] != gate[2], Not(gate[3]))
+    is_not = lambda gate: And(gate[0], Not(gate[1]) == gate[2], Not(gate[3]))
 
     asserts = []
     for gate in f:
@@ -52,7 +52,7 @@ def f_constraints(f):
 def encode(num_inputs, outputs, num_inner_gates):
     # Create variables (and values for inputs) for each x_i, given concrete inputs
     x = [[Bool("x{:d}{}".format(gate_idx, val)) for val in product(range(2), repeat=num_inputs)]
-        for gate_idx in range(num_inputs + num_inner_gates)]
+         for gate_idx in range(num_inputs + num_inner_gates)]
     # Replace variables for inputs by corresponding constants
     for input_idx in range(num_inputs):
         for idx, bits in enumerate(product(range(2), repeat=num_inputs)):
@@ -60,13 +60,14 @@ def encode(num_inputs, outputs, num_inner_gates):
 
     # Create functions f:B^2-->B realised by the inner gates
     f = [[Bool("f{:d}{}".format(gate_idx, val)) for val in product(range(2), repeat=2)]
-        for gate_idx in range(num_inputs, len(x))]
+         for gate_idx in range(num_inputs, len(x))]
 
     # Add simplified assertions to goal
     goal = Goal()
     for assrt in output_connections(num_inputs, x, outputs) + gate_connections(num_inputs, x, f) + f_constraints(f):
         goal.add(simplify(assrt))
 
+    # Reduce cardinality constraints; transform to CNF
     to_cnf = Then(Tactic("card2bv"), Tactic("tseitin-cnf"))
     subgoals = to_cnf(goal)
     assert len(subgoals) == 1, "Tactic should have resulted in a single goal"
