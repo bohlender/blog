@@ -330,7 +330,7 @@ What needs mention though is how to export the constraints in the [DIMACS](https
 Z3 provides [tactics](http://theory.stanford.edu/~nikolaj/programmingz3.html#sec-tactics) that can be applied to a set of constraints.
 By applying `card2bv`, all occurring cardinality constraints will be reduced to propositional logic.
 The subsequent `tseitin-cnf` tactic brings the resulting constraints into [conjunctive normal form](https://en.wikipedia.org/wiki/Conjunctive_normal_form) (CNF) -- in fact they almost are in CNF already.
-The resulting constraints are then be output in the DIMACS format.
+The resulting constraints can then be output in the DIMACS format.
 
 Although a SAT-based characterisation is a lot larger than its SMT-base counterpart, it is less complex and is typically solved in orders-of-magnitude less time.
 Feel free to experiment with [the implementation](gen_sat.py), or try to reconstruct the full adder circuit [shown above](gfx/full_adder.svg) from the [generated SAT instance](full_adder.cnf) and [the solution](full_adder.log) found by a SAT solver.
