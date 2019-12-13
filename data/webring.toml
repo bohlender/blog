@@ -1,14 +1,13 @@
 
 [[articles]]
-link = '''https://zipcpu.com/quiz/2019/11/29/quiz08.html'''
-title = '''Quiz #8: Will this pass a bounded model check?'''
+link = '''https://zipcpu.com/quiz/2019/12/12/quiz09.html'''
+title = '''Quiz #9: Immediate assertions midst blocking assignments'''
 summary = '''
 
-As always, if you are unsure, I would encourage you to try this proof yourself.
 '''
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
-date = '''November 29, 2019'''
+date = '''December 12, 2019'''
 [[articles]]
 link = '''https://blog.regehr.org/archives/1700'''
 title = '''Helping Generative Fuzzers Avoid Looking Only Where the Light is Good, Part 1'''

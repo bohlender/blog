@@ -10,7 +10,7 @@ videos: []
 audio: []
 ---
 A few weeks ago, I was asked the following riddle:
-<q>Design a logic circuit with three inputs and three outputs, such that the outputs are the inverted inputs. You may use arbitrary many AND and OR gates, but at most two NOT gates</q>.
+<q>Design a [logic circuit](https://en.wikipedia.org/wiki/Logic_gate) with three inputs and three outputs, such that the outputs are the inverted inputs. You may use arbitrary many AND and OR gates, but at most two NOT gates</q>.
 Although the characterisation of this problem as an [SMT](https://en.wikipedia.org/wiki/Satisfiability_modulo_theories) instance is straightforward, I found it necessary to reduce it to [SAT](https://en.wikipedia.org/wiki/Satisfiability) and incorporate further assumptions to achieve reasonable performance.
 This post illustrates said process, ranging from the original idea via a standard formulation of SAT-based logic synthesis to a problem-specific and more constrained instance.
 <!--more-->
