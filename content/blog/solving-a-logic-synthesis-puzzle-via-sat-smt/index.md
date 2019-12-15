@@ -187,7 +187,7 @@ I've attached the full adder synthesis [SMT instance](full_adder.smt2) to this p
 The solution I get from Z3 describes the following circuit:
 {{< figure src="gfx/full_adder.svg" title="Visualisation of synthesised full adder" width="350px" >}}
 
-Unfortunately, the quantifiers, uninterpreted functions and cardinality constraints render the instance characterises the introductory puzzle too difficult to be solved within several days.
+Unfortunately, the quantifiers, uninterpreted functions and cardinality constraints render the instance that characterises the introductory puzzle too difficult to be solved within several days.
 Therefore, in the next section, we reduce the characterisation to [propositional logic](https://en.wikipedia.org/wiki/Propositional_calculus), trading off the complexity of our constraints against a larger instance, and end up with a standard approach for SAT-based logic synthesis.
 While the SMT-based synthesis of a full adder may take a few seconds, the [corresponding SAT instance](full_adder.cnf) will be [solvable in milliseconds](full_adder.log).
 
