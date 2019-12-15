@@ -341,35 +341,29 @@ Although a SAT-based characterisation is a lot larger than its SMT-based counter
 Feel free to experiment with [the implementation](gen_sat.py), or try to reconstruct the full adder circuit [shown above](gfx/full_adder.svg) from the [generated SAT instance](full_adder.cnf) and [the solution](full_adder.log) found by a SAT solver.
 
 Still, the constraint that restricts the number of NOTs seems to make the SAT instance that characterises the introductory puzzle hard to solve.
-The next section proposes two additional assumptions that are rather weak but sufficient to alleviate the combinatorial explosion, and make the constraints solvable in reasonable time.
+The next section proposes an additional assumption that is rather weak but sufficient to alleviate the combinatorial explosion, and make the constraints solvable in reasonable time.
 
 ## Solving the Puzzle
 The constraints that we used so far did not make any assumptions that could disregard potential solutions to the puzzle, but merely formalised the provided information.
-To make the combinatorial explosion more manageable, we will now also add some assumptions that are _likely_ to hold for the circuit, but may potentially disregard some solutions.
+To make the combinatorial explosion more manageable, we will now incorporate an assumption that _likely_ holds for the circuit, but may potentially disregard some solutions.
 
-First of all, if the puzzle allows the use of at most two NOTs, almost certainly both NOTs are necessary.
-It is also quite likely that if there is a solution, it can also be realised with both NOTs placed two gates apart, so the result of the first NOT can pass through all kinds of allowed gates (an AND and an OR) before reaching the second NOT.
-So there should be some $i$, such that both $f_i$ and $f_{i+3}$ are NOT gates.
-
-This is the first puzzle-specific assumption that is added to the generic characterisation:
-{{< highlight-file "gen_puzzle.py" Python 54 58 >}}
-
-The second assumption is a lot weaker and concerns the connections of the outputs.
-If there is a solution, it likely can be formulated so that the outputs are connected to the very last gates of the circuit.
-In particular, $g_2$ can certainly be computed independently, i.e. without referring to the value of $g_1$ or $g_0$.
-We can enforce these connections via:
+Our assumption is rather weak and concerns the connections of the outputs to the inner gates.
+We assume that if there is a solution, it likely can be formulated so that the outputs are connected to the very last gates of the circuit.
+In particular, each goal $g_i$ can certainly be computed independently, i.e. without referring to the value of an other output $g_j$.
+We can enforce these connections by extending our [generic SAT-based characterisation](gen_sat.py) with:
 {{< highlight-file "gen_puzzle.py" Python 16 18 >}}
 
-With these additional constraints, it took an old i5-4690 CPU [about 15min](puzzle.log) to solve the [corresponding SAT instance](puzzle.cnf) with **22 inner gates**.
+With these additional constraints, it took an old i5-4690 CPU [about 30min](puzzle.log) to solve the [corresponding SAT instance](puzzle.cnf) with **19 inner gates**.
 The synthesised circuit looks as follows:
-{{< figure src="gfx/puzzle.svg" title="Solution to puzzle" >}}
+{{< figure src="gfx/puzzle.svg" title="Solution to puzzle" width="500px" >}}
 Since we only allow gates with fan-in 2, here, the NOT2 denotes a NOT on the second input.
 
 ## Do Try This at Home!
-Although the SAT-based characterisation of logic synthesis turns out to be practical -- especially when the artificial constraint on the number of gates is dropped -- there is still room for improvement and experimentation.
+Although the SAT-based characterisation of logic synthesis turns out to be [common in practice](https://people.eecs.berkeley.edu/~alanmi/publications/2018/date18_exact.pdf) -- especially without the artificial constraint on the number of gates -- there is still room for improvement and experimentation.
 Here are some ideas that you might want to explore on your own (easiest first):
 
 * Instead of relying on an external solver to solve the generated constraints, use the API to invoke the check programmatically.
+* Does a solution to the riddle with less than 19 gates exist? Prove your hypothesis.
 * Automate the interpretation of the solutions found by a solver as logic circuits, and plot them via [DOT](https://en.wikipedia.org/wiki/DOT_(graph_description_language)).
 * Extend the characterisation to allow some composite gates.
   For example, I found that the [expected solution](https://puzzling.stackexchange.com/questions/9438/invert-three-inputs-with-two-not-gates) has circuitry to decide whether more than one (or more than two) inputs are $\mathit{true}$.
@@ -377,7 +371,7 @@ Here are some ideas that you might want to explore on your own (easiest first):
 * Instead of characterising the circuit for a fixed number of gates, devise an incremental variant of SMT-based or SAT-based synthesis which incorporates one additional gate at a time (and checks satisfiability).
   It should be advantageous to have the solver reuse information established during checks with fewer gates.
 
-If you manage to solve the riddle without the domain-specific assumptions, or have any ideas how to do this more efficiently with SAT/SMT solving, please let me know.
-It might also be possible to solve this with the logic synthesis tools mentioned in [the paper](https://people.eecs.berkeley.edu/~alanmi/publications/2018/date18_exact.pdf) that discusses the practicability of the SAT-based encoding we ended up with.
+If you manage to solve the riddle without the domain-specific assumption, or have any ideas how to do this more efficiently with SAT/SMT solving, please let me know.
+It might also be possible to solve this with the logic synthesis tools mentioned in [the paper](https://people.eecs.berkeley.edu/~alanmi/publications/2018/date18_exact.pdf) that discusses the SAT-based encoding we ended up with.
 
 {{< list-resources "{*.py,*.cnf,*.smt2,*.log}" >}}
