@@ -1,13 +1,22 @@
 
 [[articles]]
-link = '''https://zipcpu.com/quiz/2019/12/12/quiz09.html'''
-title = '''Quiz #9: Immediate assertions midst blocking assignments'''
-summary = '''
+link = '''https://zipcpu.com/blog/2019/12/25/christmas-gospel.html'''
+title = '''The Christmas Gospel'''
+summary = '''Surely I’m not the only one wondering whether there’s a message of Christ
+left in this Christmas time of rampant commercialism, so with your indulgence
+let’s take a moment to look back into the origins of Christmas.
 
-'''
+Before beginning, let me define a few term…'''
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
-date = '''December 12, 2019'''
+date = '''December 25, 2019'''
+[[articles]]
+link = '''https://www.msoos.org/2019/12/weighted-to-unweighted-counting-and-sampling/'''
+title = '''Weighted to Unweighted Counting and Sampling'''
+summary = '''This blog post is to promote the tool here (paper here) that converts weighted counting and sampling to their unweighted counterparts. It turns out that weighted counting and sampling is a thing. It’s basically a conjunctive normal form formula, a CNF, wi…'''
+sourceLink = '''https://www.msoos.org'''
+sourceTitle = '''Wonderings of a SAT geek'''
+date = '''December 23, 2019'''
 [[articles]]
 link = '''https://blog.regehr.org/archives/1700'''
 title = '''Helping Generative Fuzzers Avoid Looking Only Where the Light is Good, Part 1'''
@@ -15,10 +24,3 @@ summary = '''Let’s take a second to recall this old joke: A policeman sees a d
 sourceLink = '''https://blog.regehr.org'''
 sourceTitle = '''Embedded in Academia'''
 date = '''November 4, 2019'''
-[[articles]]
-link = '''https://artificial-mind.net/blog/2019/10/24/pytorch-cpp'''
-title = '''PyTorch Setup (C&#43;&#43;17, zapcc, QtCreator, Debian, user-space)'''
-summary = '''Harder than it should be.'''
-sourceLink = '''https://artificial-mind.net/'''
-sourceTitle = '''artificial::mind'''
-date = '''October 24, 2019'''
