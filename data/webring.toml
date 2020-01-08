@@ -1,15 +1,19 @@
 
 [[articles]]
-link = '''https://zipcpu.com/blog/2019/12/25/christmas-gospel.html'''
-title = '''The Christmas Gospel'''
-summary = '''Surely I’m not the only one wondering whether there’s a message of Christ
-left in this Christmas time of rampant commercialism, so with your indulgence
-let’s take a moment to look back into the origins of Christmas.
+link = '''https://zipcpu.com/blog/2020/01/01/2019-in-review.html'''
+title = '''2019: AXI Meets Formal Verification'''
+summary = '''It’s a new year!  Let’s continue our end-of-year tradition from
+2017
+and 2018
+and take a moment to look back over 2019, from the
+perspective of the ZipCPU blog, and see what stands out.
 
-Before beginning, let me define a few term…'''
+Blog History
+
+If you aren’t familiar with the back story, I started the ZipC…'''
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
-date = '''December 25, 2019'''
+date = '''January 1, 2020'''
 [[articles]]
 link = '''https://www.msoos.org/2019/12/weighted-to-unweighted-counting-and-sampling/'''
 title = '''Weighted to Unweighted Counting and Sampling'''

@@ -3,7 +3,7 @@ title: "Leveraging Horn Clause Solving for Compositional Verification of PLC Sof
 date: 2019-11-26
 draft: false
 subtitle: "Dimitri Bohlender, Stefan Kowalewski"
-in: "DEDS 2020"
+in: "DEDS 2019"
 section: "Publications"
 subsection: ""
 links:
