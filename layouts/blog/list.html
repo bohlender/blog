@@ -36,6 +36,9 @@
                     </div>
                 </header>
                 <p>{{ .summary | markdownify }}</p>
+	            <a class="read-more" href="{{ .link }}">
+                    &raquo; Read more
+                </a>
             </article>
         {{ end }}
     </div>
