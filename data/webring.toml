@@ -1,19 +1,26 @@
 
 [[articles]]
-link = '''https://zipcpu.com/blog/2020/01/01/2019-in-review.html'''
-title = '''2019: AXI Meets Formal Verification'''
-summary = '''It’s a new year!  Let’s continue our end-of-year tradition from
-2017
-and 2018
-and take a moment to look back over 2019, from the
-perspective of the ZipCPU blog, and see what stands out.
+link = '''https://zipcpu.com/quiz/2020/01/23/quiz11.html'''
+title = '''Quiz #11: Induction and clock enables'''
+summary = '''
 
-Blog History
+Induction
+can be very confusing to an HDL designer trying to use the formal verification
+tools for the first time.  A common refrain that I’ve heard among those
+I’ve mentored is, “but I set this value on reset!  How can it ever get into
+this state?”
 
-If you aren’t familiar with the back story, I started the ZipC…'''
+The induct…'''
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
-date = '''January 1, 2020'''
+date = '''January 23, 2020'''
+[[articles]]
+link = '''https://blog.regehr.org/archives/1714'''
+title = '''Precision Opportunities for Demanded Bits in LLVM'''
+summary = '''[Although this post was written to stand by itself, it builds on the previous one. It is authored by Jubi Taneja, Zhengyang Liu, and John Regehr.] When designing computer systems, it can be useful to avoid specifying behaviors too tightly. For example, we…'''
+sourceLink = '''https://blog.regehr.org'''
+sourceTitle = '''Embedded in Academia'''
+date = '''January 22, 2020'''
 [[articles]]
 link = '''https://www.msoos.org/2019/12/weighted-to-unweighted-counting-and-sampling/'''
 title = '''Weighted to Unweighted Counting and Sampling'''
@@ -21,10 +28,3 @@ summary = '''This blog post is to promote the tool here (paper here) that conver
 sourceLink = '''https://www.msoos.org'''
 sourceTitle = '''Wonderings of a SAT geek'''
 date = '''December 23, 2019'''
-[[articles]]
-link = '''https://blog.regehr.org/archives/1700'''
-title = '''Helping Generative Fuzzers Avoid Looking Only Where the Light is Good, Part 1'''
-summary = '''Let’s take a second to recall this old joke: A policeman sees a drunk man searching for something under a streetlight and asks what the drunk has lost. He says he lost his keys and they both look under the streetlight together. After a few minutes the pol…'''
-sourceLink = '''https://blog.regehr.org'''
-sourceTitle = '''Embedded in Academia'''
-date = '''November 4, 2019'''
