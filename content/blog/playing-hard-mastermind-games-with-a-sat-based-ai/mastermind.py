@@ -1,23 +1,17 @@
-from itertools import product, permutations
-from dataclasses import dataclass
+from collections import namedtuple
+from itertools import *
 from random import randint
-from z3 import *
 from timeit import default_timer
+from z3 import *
 
 # Configures the complexity of the secret
-NUM_POSITIONS = 16
+NUM_POSITIONS = 4
 NUM_SYMBOLS = 6
 
-
-@dataclass
-class Feedback:
-    """Structure for tracking the numbers of full matches and partial/symbol matches"""
-    full_matches: int
-    symbol_matches: int
+Feedback = namedtuple('Feedback', ['full_matches', 'symbol_matches'])
 
 
 def eval_guess(secret, guess):
-    """Given the secret, computes the feedback/matches for a guess"""
     # Count full matches (position & symbol)
     guess_rest = [a for (a, b) in zip(guess, secret) if a != b]
     secret_rest = [b for (a, b) in zip(guess, secret) if a != b]
@@ -35,21 +29,29 @@ def eval_guess(secret, guess):
 
 
 def is_consistent(secret, guess, feedback):
-    """Returns whether the feedback for a guess is consistent with the provided secret"""
     return feedback == eval_guess(secret, guess)
 
 
 def is_consistent_with_history(secret, guesses, feedbacks):
-    """Returns whether the list of feedback for a list of guesses is consistent with the provided secret"""
     for guess, feedback in zip(guesses, feedbacks):
         if not is_consistent(secret, guess, feedback):
             return False
     return True
 
 
-class Game:
-    """Runs the Mastermind game loop for a given secret and player implementation"""
+def all_secrets():
+    return product(range(NUM_SYMBOLS), repeat=NUM_POSITIONS)
 
+
+def all_feedbacks():
+    for full_matches in range(NUM_POSITIONS + 1):
+        for symbol_matches in range(NUM_POSITIONS + 1 - full_matches):
+            if full_matches == NUM_POSITIONS - 1 and symbol_matches == 1:
+                continue
+            yield Feedback(full_matches, symbol_matches)
+
+
+class Game:
     def __init__(self, secret, player):
         self.secret = secret
         self.player = player
@@ -70,8 +72,6 @@ class Game:
 
 
 class Player:
-    """Abstract interface for a client/player/code-breaker"""
-
     def initial_guess(self):
         raise NotImplementedError()
 
@@ -80,30 +80,65 @@ class Player:
 
 
 class ExplicitConsistentAi(Player):
-    """Explicitly tracks and refines the set of secrets that are consistent with the received feedback"""
-
     def __init__(self):
         self.last_guess = None
-        self.candidates = list(product(range(NUM_SYMBOLS), repeat=NUM_POSITIONS))
+        self.candidates = list(all_secrets())
 
     def initial_guess(self):
         self.last_guess = self.candidates[0]
         return self.last_guess
 
     def make_guess(self, feedback):
-        self.candidates = [c for c in self.candidates if
-                           is_consistent(c, self.last_guess, feedback) and c != self.last_guess]
+        self.candidates = [c for c in self.candidates
+                           if is_consistent(c, self.last_guess, feedback)
+                           and c != self.last_guess]
+        return self.initial_guess()
+
+
+class ExplicitMinimaxAi(Player):
+    def __init__(self):
+        self.candidates = list(all_secrets())
+        self.not_candidates = list()
+        self.guesses = list()
+
+    def initial_guess(self):
+        # Pick the (not necessarily consistent) candidate with the best worst feedback
+        # w.r.t. the size of the set of consistent candidates (smaller = better)
+        not_tried_secrets = (c for c in chain(self.candidates, self.not_candidates)
+                             if c not in self.guesses)
+
+        best_c = None
+        best_size = math.inf
+        for c in not_tried_secrets:
+            # Partition consistent candidates by feedback
+            feedback_occs = {f: 0 for f in all_feedbacks()}
+            for s in self.candidates:
+                f = eval_guess(s, c)
+                feedback_occs[f] += 1
+
+            # Find worst feedback for this c
+            max_size = max(feedback_occs.values())
+
+            # Identify the c that has the best worst feedback
+            if max_size < best_size:
+                best_size = max_size
+                best_c = c
+
+        self.guesses.append(best_c)
+        return self.guesses[-1]
+
+    def make_guess(self, feedback):
+        self.not_candidates.extend(c for c in self.candidates if not is_consistent(c, self.guesses[-1], feedback))
+        self.candidates = [c for c in self.candidates if is_consistent(c, self.guesses[-1], feedback)]
         return self.initial_guess()
 
 
 class LazyExplicitConsistentAi(Player):
-    """Lazily enumerates the secrets that are consistent with the received feedback"""
-
     def __init__(self):
         self.guesses = list()
         self.feedbacks = list()
-        self.candidates = (c for c in product(range(NUM_SYMBOLS), repeat=NUM_POSITIONS) if
-                           is_consistent_with_history(c, self.guesses, self.feedbacks))
+        self.candidates = (c for c in all_secrets()
+                           if is_consistent_with_history(c, self.guesses, self.feedbacks))
 
     def initial_guess(self):
         self.guesses.append(next(self.candidates))
@@ -115,8 +150,6 @@ class LazyExplicitConsistentAi(Player):
 
 
 class SymbolicConsistentAi(Player):
-    """Builds and solves a logical characterisation of the secrets that are consistent with the received feedback"""
-
     def __init__(self):
         self.last_guess = None
         self.solver = SolverFor("QF_FD")
@@ -189,7 +222,6 @@ class SymbolicConsistentAi(Player):
 
 
 def main(player):
-    """Plays a game of Mastermind with the provided player implementation and a random secret"""
     secret = tuple(randint(0, NUM_SYMBOLS - 1) for _ in range(NUM_POSITIONS))
     game = Game(secret, player)
 
@@ -201,5 +233,6 @@ def main(player):
 
 if __name__ == "__main__":
     # main(ExplicitConsistentAi())
+    main(ExplicitMinimaxAi())
     # main(LazyExplicitConsistentAi())
-    main(SymbolicConsistentAi())
+    # main(SymbolicConsistentAi())
