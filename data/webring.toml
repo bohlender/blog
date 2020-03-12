@@ -1,12 +1,5 @@
 
 [[articles]]
-link = '''https://blog.regehr.org/archives/1722'''
-title = '''Alive 2 Part 1: Introduction'''
-summary = '''[This piece is co-authored by Nuno P. Lopes and John Regehr.] Compiler bugs threaten the correctness of almost any computer system that uses compiled code. Translation validation is a path towards reliably correct compilation that works by checking that a…'''
-sourceLink = '''https://blog.regehr.org'''
-sourceTitle = '''Embedded in Academia'''
-date = '''March 12, 2020'''
-[[articles]]
 link = '''https://zipcpu.com/blog/2020/03/08/easyaxil.html'''
 title = '''Buidilng an AXI-Lite slave the easy way'''
 summary = '''Since writing my first two articles on AXI-Lite, the first discussing how
@@ -25,6 +18,13 @@ The cool …'''
 sourceLink = '''https://zipcpu.com/'''
 sourceTitle = '''The ZipCPU by Gisselquist Technology'''
 date = '''March 8, 2020'''
+[[articles]]
+link = '''https://deepnight.net/tutorial/using-my-gamebase-to-create-a-heaps-game/'''
+title = '''Using GameBase to create an Haxe&#43;Heaps game'''
+summary = '''An easy way to get started making a 2D game using Haxe + Heaps'''
+sourceLink = '''https://deepnight.net'''
+sourceTitle = '''deepnight.net'''
+date = '''March 6, 2020'''
 [[articles]]
 link = '''https://www.msoos.org/2019/12/weighted-to-unweighted-counting-and-sampling/'''
 title = '''Weighted to Unweighted Counting and Sampling'''
