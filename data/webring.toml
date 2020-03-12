@@ -1,26 +1,30 @@
 
 [[articles]]
-link = '''https://zipcpu.com/quiz/2020/01/23/quiz11.html'''
-title = '''Quiz #11: Induction and clock enables'''
-summary = '''
-
-Induction
-can be very confusing to an HDL designer trying to use the formal verification
-tools for the first time.  A common refrain that I’ve heard among those
-I’ve mentored is, “but I set this value on reset!  How can it ever get into
-this state?”
-
-The induct…'''
-sourceLink = '''https://zipcpu.com/'''
-sourceTitle = '''The ZipCPU by Gisselquist Technology'''
-date = '''January 23, 2020'''
-[[articles]]
-link = '''https://blog.regehr.org/archives/1714'''
-title = '''Precision Opportunities for Demanded Bits in LLVM'''
-summary = '''[Although this post was written to stand by itself, it builds on the previous one. It is authored by Jubi Taneja, Zhengyang Liu, and John Regehr.] When designing computer systems, it can be useful to avoid specifying behaviors too tightly. For example, we…'''
+link = '''https://blog.regehr.org/archives/1722'''
+title = '''Alive 2 Part 1: Introduction'''
+summary = '''[This piece is co-authored by Nuno P. Lopes and John Regehr.] Compiler bugs threaten the correctness of almost any computer system that uses compiled code. Translation validation is a path towards reliably correct compilation that works by checking that a…'''
 sourceLink = '''https://blog.regehr.org'''
 sourceTitle = '''Embedded in Academia'''
-date = '''January 22, 2020'''
+date = '''March 12, 2020'''
+[[articles]]
+link = '''https://zipcpu.com/blog/2020/03/08/easyaxil.html'''
+title = '''Buidilng an AXI-Lite slave the easy way'''
+summary = '''Since writing my first two articles on AXI-Lite, the first discussing how
+to verify the an AXI-Lite
+interface and the second
+how to build an AXI-Lite
+slave, I’ve had the
+opportunity to build not just one but several AXI-Lite slaves.
+(1,
+2,
+3,
+4,
+5,
+6, etc.)
+The cool …'''
+sourceLink = '''https://zipcpu.com/'''
+sourceTitle = '''The ZipCPU by Gisselquist Technology'''
+date = '''March 8, 2020'''
 [[articles]]
 link = '''https://www.msoos.org/2019/12/weighted-to-unweighted-counting-and-sampling/'''
 title = '''Weighted to Unweighted Counting and Sampling'''
