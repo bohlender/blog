@@ -1,8 +1,9 @@
 ---
 title: "Playing Hard Mastermind Games with a SAT-based AI"
 date: 2020-03-08T16:12:02+01:00
+publishDate: 2020-03-12
 tags: ["SAT", "AI", "Puzzle"]
-draft: true
+draft: false
 math: true
 images: []
 videos: []
@@ -82,13 +83,13 @@ It requires a potential player or AI to be able to give a first guess at the beg
 {{< highlight-file "mastermind.py" Python 54 71 >}}
 
 ### Where's the Difficulty?
-With four positions and six colours there are only $6^4=1296$ possible combinations to choose from, so keeping the set of all combinations in memory and working with it is perfectly feasible when solving classic Mastermind instances.
+With four positions and six colours there are only $6^4=1\\,296$ possible combinations to choose from, so keeping the set of all combinations in memory and working with it is perfectly feasible when solving classic Mastermind instances.
 However, there is nothing hindering us from using even longer sequences or introducing further colours.
 The **code length** $|s|$ and **set of colours/symbols** $\Sigma$ are exactly the parameters that are typically varied to arrive at the different [variations of Mastermind](https://en.wikipedia.org/wiki/Mastermind_(board_game)#Variations).
 
-For example, *Grand Mastermind* keeps the secret length of the original but uses $25$ symbols ($5$ shapes, $5$ colours) which allows for $25^4=390.625$ different codes.
+For example, *Grand Mastermind* keeps the secret length of the original but uses $25$ symbols ($5$ shapes, $5$ colours) which allows for $25^4=390\\,625$ different codes.
 Overall, most Mastermind variants feature a number of combinations in this order of magnitude (thousands), rendering them amenable to analysis via methods that explicitly explore the game tree.
-At the time of writing, [the Wikipedia page](https://en.wikipedia.org/wiki/Mastermind_(board_game)#Variations) lists only one exception: *Mastermind Secret Search* uses $26$ letters as symbols to form words up to a length of 6 characters which gives rise to $26^6=308.915.776$ possible secrets.
+At the time of writing, [the Wikipedia page](https://en.wikipedia.org/wiki/Mastermind_(board_game)#Variations) lists only one exception: *Mastermind Secret Search* uses $26$ letters as symbols to form words up to a length of six characters, which gives rise to $26^6=308\\,915\\,776$ possible secrets.
 
 {{< note >}}
 Keep in mind that Mastermind games are designed to be played by humans, and mostly feature reasonably small numbers of combinations.
@@ -97,7 +98,7 @@ To alleviate the difficulty of playing the variations with large numbers of comb
 *Mastermind Secret Search* limits the secret codes to valid words and provides separate feedback for each letter, stating whether the secret letter occurs earlier or later in the alphabet.
 {{</ note >}}
 
-But how to approach playing Mastermind variants with $6^{16}=2.821.109.907.456$ or more combinations without resorting to blind guessing?
+But how to approach playing Mastermind variants with $6^{16}=2\\,821\\,109\\,907\\,456$ or more combinations without resorting to blind guessing?
 Just to give you an idea: even iterating through all these combinations will take <q>forever</q> and is out of question for a game AI.
 Therefore, even when not aiming for optimal play but merely reasonable guesses, explicit methods won't get us far.
 However, they work well for most practical Mastermind variants and are a good place to start getting a feel for the problem domain.
@@ -150,7 +151,7 @@ A downside of the above method is that it builds and keeps a list of all consist
 Since the number of possible secrets grows exponentially in the admissible length of secrets, this may already hinder us from solving slightly harder Mastermind variations, e.g. with $6^8$ possible secrets.
 
 `LazyExplicitConsistentAi` is a more practical implementation of the previous approach.
-It enumerates the consistent combinations but only needs one candidate to be explicitly present in memory at a time, which results in a negligible memory footprint:
+It enumerates the consistent combinations but only needs one candidate to be explicitly present in memory at a time, which results in a small memory footprint:
 {{< highlight-file "mastermind.py" Python 136 149 >}}
 
 Unlike the previous approach, which incrementally refines the set of candidates w.r.t. the latest feedback, a lazily generated candidate is checked w.r.t. all of the received feedback:
@@ -165,10 +166,10 @@ Instead of just picking some consistent candidate, one can also analyse how prom
 The first and probably most popular way for picking a "good" candidate was suggested by [Knuth](https://www.cs.uni.edu/~wallingf/teaching/cs3530/resources/knuth-mastermind.pdf) in 1977.
 The general idea is that the best guess should minimise the set of consistent candidates -- no matter the feedback.
 By assuming the least helpful feedback to be returned for each guess, and finding the (not necessarily consistent) candidate in this setting that will reduce the set of consistent candidates the most, Knuth effectively implements a shallow [Minimax](https://en.wikipedia.org/wiki/Minimax) rule.
-While a tree-like illustration is most helpful for Minimax on deeper games, I found the table-oriented argument from [the overview](http://www.philos.rug.nl/~barteld/master.pdf) more apt in the case of Mastermind.
+While a tree-like illustration is most helpful for Minimax on longer games, I found the table-oriented argument from [the overview](http://www.philos.rug.nl/~barteld/master.pdf) to be more apt in the case of Mastermind.
 
-Consider committing some candidate $c$ and receiving some feedback $f$.
-The following table illustrates the possible outcomes depending on the chosen $c$ and the codemaker's feedback $f$ for the very first guess:
+Consider committing some candidate $c$ and, in turn, receiving some feedback $f$.
+The following table illustrates the possible outcomes depending on the chosen $c$ and the codemaker's feedback $f$ for the very *first guess*:
 
 |       | &nbsp;$(0,0,0,0)$&nbsp; | &nbsp;$(0,0,0,1)$&nbsp; | &nbsp;$(0,0,1,1)$&nbsp; | &nbsp;$\dots$&nbsp; |
 | :---: | :---------------------: | :---------------------: | :---------------------: | :-----------------: | 
@@ -199,13 +200,13 @@ It is sufficient to consider $(0,0,0,0)$, $(0,0,0,1)$, $(0,0,1,1)$, $(0,0,1,2)$ 
 
 To develop the idea further, finding the <q>best</q> guess amounts to constructing such a table, identifying the worst case of each column, and picking the column/candidate with the smallest worst case.
 According to the provided table, *a* best initial guess would be $(0,0,1,1)$, which guarantees to bring the set of candidates down to a size of at most $256$.
-`ExplicitMinimaxAi` implements this method to determine the best guess.
+`ExplicitMinimaxAi` implements this method to determine the best guess:
 {{< highlight-file "mastermind.py" Python 98 133 >}}
 
-Note that the best move may be to gather further information and purposefully make a guess that is inconsistent with the received feedback.
-However, if there is both a consistent and an inconsistent candidate that are "best", one should of course prefer the consistent one -- it might match the secret after all.
+Note that the best move may even be to gather further information and purposefully make a guess that is inconsistent with the received feedback.
+However, if there is both a consistent and an inconsistent candidate that are <q>best</q>, one should of course prefer the consistent one -- it might match the secret after all.
 
-The Minimax-based approach manages to solve each classic Mastermind instance within $5$ guesses, and needs $4.476$ rounds on average.
+The Minimax-based approach manages to solve each classic Mastermind instance within five guesses, and needs $4.476$ rounds on average.
 Unfortunately, the runtime complexity of this and similar methods that optimise rigorously is quadratic in the number of candidates.
 Considering that even iterating over all possible secrets of a hard Mastermind instance takes too long for a game AI, aiming for optimal guesses is quite a stretch.
 
@@ -214,14 +215,160 @@ So far we've seen that the Minimax-based approach is well-suited for Mastermind 
 However, despite the small memory footprint, the core problem is that enumerative methods don't scale to larger Mastermind instances.
 
 It would be nice if we could at least manage to compute consistent candidates for the hard instances, but even this problem [is known](https://arxiv.org/abs/cs/0512049) to be [NP-complete](https://en.wikipedia.org/wiki/NP-complete).
-Luckily, we can reduce the problem to another NP-complete problem and leverage the existing highly-tuned solvers for it: the [Boolean satisfiability problem (SAT)](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem).
+Luckily, we can reduce the problem to another NP-complete problem -- the [Boolean satisfiability problem (SAT)](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) -- and leverage the highly-tuned solvers existing for it.
 
 All we have to do is devise a logical characterisation of the candidates that are consistent with the feedback received so far, and use a SAT solver to acquire such a candidate.
+Let's see what kind of variables and constraints we need for this.
 
+### Encoding the Symbol Mapping
+Since we want to guess some secret $s$, we first of all need variables that indicate which symbol occurs at which position.
+To this end, we introduce the Boolean variables:
+$$s_{\mathit{pos},\mathit{sym}}$$
+where $\mathit{pos}\in \\\{0,\dots,|s|-1\\\}, \mathit{sym}\in\Sigma$.
 
-<!-- Add matching graphic (prior to encoding) -->
+The intended semantics is that an assignment $s_{1,2}=\mathit{true}$ denotes symbol $2$ to be at index $1$ of $s$.
+However, since there are no constraints yet, a solver might just as well choose $s_{1,2}$ and $s_{1,3}$ to be $\mathit{true}$, which suggest both $2$ and $3$ to be at index $1$ of the secret.
+
+To characterise that each position of the tuple $s$ has **exactly one** symbol, we need add an according *cardinality constraint* for each position.
+Assuming the classic Mastermind setting, i.e. $|s|=4$ and $|\Sigma|=6$, we add the constraints:
+
+{{< math >}}
+\begin{aligned}
+s_{0,0} + s_{0,1} + s_{0,2} + s_{0,3} + s_{0,4} + s_{0,5} &= 1,\\
+s_{1,0} + s_{1,1} + s_{1,2} + s_{1,3} + s_{1,4} + s_{1,5} &= 1,\\
+s_{2,0} + s_{2,1} + s_{2,2} + s_{2,3} + s_{2,4} + s_{2,5} &= 1,\\
+s_{3,0} + s_{3,1} + s_{3,2} + s_{3,3} + s_{3,4} + s_{3,5} &= 1\\
+\end{aligned}
+{{</ math >}}
+
+If we were to query the satisfiability of our SAT instance now, we would get a satisfying assignment with four of the $s_{\mathit{pos},\mathit{sym}}$ variables set to $\mathit{true}$.
+
+Using the Python bindings for [Z3](https://github.com/Z3Prover/z3/) -- a popular solver for SAT and [SMT](https://en.wikipedia.org/wiki/SMT_solver) instances -- the initialisation of `SymbolicConsistentAi` creates the discussed variables and constraints:
+{{< highlight-file "mastermind.py" Python 152 164 >}}
+
+### Encoding Full Matches
+Initially, there is no feedback to constrain the set of consistent candidates, and picking a random candidate is unproblematic.
+Any subsequent guess, however, should at least be consistent with the feedback accumulated up to that point.
+To characterise such candidates, we next consider which constraints some feedback $f$ for a committed candidate $c$ imposes.
+
+Consider the first part of the feedback: the number of full matches.
+This is clearly another cardinality constraint, but this one does not constrain the $s_{\mathit{pos},\mathit{sym}}$ variables directly.
+Instead we need some auxiliary variables
+$$\mathit{fm}_\mathit{pos}$$
+where $\mathit{pos}\in \\\{0,\dots,|s|-1\\\}$ to identify in which position we have a full match.
+These are the variables for which we create the constraint.
+Assuming the classic Mastermind setting and some feedback $f=(2,1)$, we simply add:
+$$\mathit{fm_0} + \mathit{fm_1} + \mathit{fm_2} + \mathit{fm_3} = 2$$
+
+Although the $\mathit{fm}\_\mathit{pos}$ variables are now constrained, they are not related to any $s_{\mathit{pos},\mathit{sym}}$ yet.
+Intuitively, $\mathit{fm}_3$ should be $\mathit{true}$, if and only if the symbol at index $3$ of the committed candidate has the same symbol as the secret at index $3$.
+With this in mind, and assuming the candidate to have been $c=(3,2,0,1)$, the following constraints establish the missing link:
+
+{{< math >}}
+\begin{aligned}
+s_{0,3} &= \mathit{fm}_0,\\
+s_{1,2} &= \mathit{fm}_1,\\
+s_{2,0} &= \mathit{fm}_2,\\
+s_{3,1} &= \mathit{fm}_3
+\end{aligned}
+{{</ math >}}
+
+The first part of `make_guess` mirrors the discussed idea, but introduces fresh variables $\mathit{fm}_\mathit{pos}$ in every iteration since the feedback of different rounds is unrelated:
+{{< highlight-file "mastermind.py" Python 182 192 >}}
+
+{{< note >}}
+During development I actually used variables of the form $\mathit{fm}_{\mathit{pos},\mathit{round}}$ to simplify debugging.
+Once done, it was simply more readable to let Z3 pick fresh names for the variables instead of manually generating distinct names for each feedback.
+{{</ note >}}
+
+### Encoding Symbol Matches
+What remains is the creation of constraints which enforce consistency w.r.t. the second part of the feedback: the number of symbol matches.
+Unlike with full match flag that we introduced for every position, a symbol match relates two positions -- one from the guess with one from the secret.
+To this end, we introduce the Boolean variables:
+$$\mathit{sm}_{\mathit{src},\mathit{dst}}$$
+where $\mathit{src},\mathit{dst}\in \\\{0,\dots,|s|-1\\\}$.
+A true literal $\mathit{sm}\_{2,3}$ shall denote that the symbol at index $2$ of the guess can be moved to index $3$ to achieve a full match.
+
+With this in mind, we can easily construct an according cardinality constraint for some feedback $f=(2,1)$:
+$$\mathit{sm}\_{0,1} +\mathit{sm}\_{0,2} + \dots + \mathit{sm}\_{3,2}  = 1$$
+Note that no constraint should have a variable of the form $\mathit{sm}_{\mathit{pos},\mathit{pos}}$, as such a case would actually describe a full match -- not a symbol match.
+
+{{< note >}}
+One might think that it is also necessary to add a constraint which disallows cases like $\mathit{sm}\_{2,1}$ and $\mathit{sm}_{3,1}$ being $\mathit{true}$ at the same time.
+After all, this would indicate that both symbols can become full matches if moved to the same position.
+
+This is not wrong, but unnecessary since the following constraints already take care of that.
+{{</ note >}}
+
+To characterise the intended relation between the $\mathit{sm}\_{\mathit{src},\mathit{dst}}$ variables and the $\mathit{s}\_\mathit{pos}$ variables, we define a matching scheme that takes existing full matches into consideration and **prioritises low indices**.
+A variable $\mathit{sm}\_{\mathit{src},\mathit{dst}}$ should be $\mathit{true}$, if and only if all of the following conditions are met:
+* There is no full match at position $\mathit{src}$:
+$$\neg \mathit{fm}\_\mathit{src}$$
+* The symbol $\mathit{sym}$ at index $\mathit{src}$ of the guess is the same as the symbol at index $\mathit{dst}$ of the secret:
+$$s_{\mathit{dst},\mathit{sym}}$$
+* There is no full match at position $\mathit{dst}$:
+$$\neg \mathit{fm}\_\mathit{dst}$$
+* No smaller (higher priority) position has matched the symbol at $\mathit{dst}$:
+$$\bigwedge_{\substack{0\leq\mathit{prev}<\mathit{src}\\\ \mathit{prev} \neq \mathit{dst}}} \neg \mathit{sm}_{\mathit{prev},\mathit{dst}}$$
+* The symbol at index $\mathit{src}$ has not matched any symbol on a smaller (higher priority) position:
+$$\bigwedge_{\substack{0\leq\mathit{prev}<\mathit{dst}\\\ \mathit{prev} \neq \mathit{src}}} \neg \mathit{sm}_{\mathit{src},\mathit{prev}}$$
+
+The rest of `make_guess` -- from the previous section -- implements the proposed encoding:
+{{< highlight-file "mastermind.py" Python 194 223 >}}
+
+Note that we treat the $\mathit{sm}\_{\mathit{src},\mathit{dst}}$ variables similar to the feedback-specific $\mathit{fm}\_\mathit{pos}$ variables: we introduce fresh ones for every feedback.
+
+### Computing a Guess
+We now have all the constraints together for the $s_{\mathit{pos},\mathit{sym}}$ variables to characterise the code sequences that are consistent with the received feedback.
+To actually compute a guess, we just need to find an assignment that satisfies these constraints.
+Luckily, we can delegate this task to any SAT solver.
+
+To construct the guess, we identify the $s_{\mathit{pos},\mathit{sym}}$ variables that are set to $\mathit{true}$:
+{{< highlight-file "mastermind.py" Python 166 180 >}}
+
+That's all there is to it.
+Feel free to experiment with [the provided implementations](mastermind.py) of the discussed methods.
+Using the `SymbolicConsistentAi` you can now easily play Mastermind games with huge numbers of secret code combinations.
+On average, it takes $10.51$ guesses to find the secret within $2\\,821\\,109\\,907\\,456$ possible combinations of the classic Mastermind variant with codes of length $16$ (see below).
+
+## Experiments
+For reference, I've also run some experiments to measure the performance on a i7-7700K CPU, using Python 3.8 and Z3 v4.8.7.
+The following table provides both a qualitative and quantitative comparison of the lazy enumeration AI and the SAT-based AI, with measurement cells formatted as <q>(Explicit / Symbolic)</q>:
+
+| $\|s\|,\|\Sigma\|$&nbsp; | &nbsp;Games Played&nbsp; | &nbsp;Avg. Turns&nbsp; | &nbsp;Max. Turns&nbsp; | &nbsp;Avg. Game Time&nbsp; | 
+| :--------: | :---------------------: | :--------------------: | :--------------------: | :------------------------: |
+| 4, 6       | all 1&#8201;296         | 5.765 / 4.659          | 9 / 7                  | 2ms / 17ms                 |
+| 5, 6       | all 7&#8201;776         | 6.218 / 5.100          | 11 / 8                 | 11ms / 34ms                |
+| 6, 6       | all 46&#8201;656        | 6.735 / 5.572          | 12 / 9                 | 71ms / 60ms                |
+| 7, 6       | 10&#8201;000            | 7.301 / 6.072          | 11 / 9                 | 466ms / 101ms              |
+| 8, 6       | 1&#8201;000             | 7.874 / 6.560          | 12 / 10                | 3s / 161ms                 |
+| 9, 6       | 10&#8201;000            | ? / 7.237              | ? / 11                 | ? / 263ms                  |
+| 10, 6      | 10&#8201;000            | ? / 7.901              | ? / 12                 | ? / 413ms                  |
+| 16, 6      | 1&#8201;000             | ? / 10.51              | ? / 15                 | ? / 6.6s                   |
+
+{{< note >}}
+Note that, due to the nondeterministic and heuristics-guided nature of SAT solving, the results may vary slightly for your setup.
+{{</ note >}}
+
+As to be expected, the lazy enumeration works well for Mastermind variants with small numbers of possible secrets but becomes unusably slow on harder instances -- omitted measurements are denoted by <q>?</q>.
+Once the average game times went into the seconds, I switched from evaluating the performance for each possible secret to a fixed number of secrets that are evenly spaced over all possible combinations.
+Accordingly, for those non-exhaustive runs, the measured maximal number of turns is not a guaranteed worst case.
+
+Although both approaches implement the same idea, i.e. make guesses that are consistent with the feedback, the qualitative results differ.
+This is because our implementation of Shapiro's idea picks the *smallest* consistent candidate but the SAT-based approach picks *some* consistent candidate.
 
 ## Do Try This at Home!
-* Other variant of Mastermind (number lock?)
+As usual, there is a lot of room for further improvement and experimentation.
+Here are some points you might want to explore on your own (easiest first):
+* There are many low hanging fruits regarding performance improvements.
+  Python is convenient for prototyping but its interpreted nature slows down the execution.
+  Try alternative Python implementations like [Pypy](https://www.pypy.org/) to get a significant speedup of the explicit approaches for free, or port the approaches to [your favorite compiled language](https://dlang.org/).
+  Furthermore, even though Z3 has tons of features and is a joy to use, I expect dedicated SAT solvers like [Lingeling](https://github.com/arminbiere/lingeling) to be even faster at solving the resulting constraints.
+* Try to devise a SAT/SMT-based solver for a Mastermind variation with different forms of feedback.
+  For example, [Number Mastermind](https://en.wikipedia.org/wiki/Mastermind_(board_game)#Variations) is played with numbers and the secret's sum is an additional clue.
+* The suggested logical characterisation is just what seemed most straightforward to me.
+  Try reformulating the encoding to achieve even better solver performance -- I might have overlooked a thing or two.
+* Investigate whether it is feasible to implement the Minimax-style approach, or some other heuristic, symbolically.
+  Depending on the chose approach, you might want to look into [MAX-SAT](https://en.wikipedia.org/wiki/Maximum_satisfiability_problem) or [(approximate) model counting](https://www.msoos.org/2018/12/how-approximate-model-counting-works/).
 
 {{< list-resources "{*.py}" >}}

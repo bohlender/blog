@@ -5,7 +5,7 @@ from timeit import default_timer
 from z3 import *
 
 # Configures the complexity of the secret
-NUM_POSITIONS = 4
+NUM_POSITIONS = 16
 NUM_SYMBOLS = 6
 
 Feedback = namedtuple('Feedback', ['full_matches', 'symbol_matches'])
@@ -152,7 +152,7 @@ class LazyExplicitConsistentAi(Player):
 class SymbolicConsistentAi(Player):
     def __init__(self):
         self.last_guess = None
-        self.solver = SolverFor("QF_FD")
+        self.solver = SolverFor("QF_FD")  # Solver for quantifier-free constraints over finite domains
 
         # Possible values at secret positions, i.e. s_0_2 denotes position 0 of secret having symbol 2
         self.secret_vars = [[Bool("s_{}_{}".format(pos, sym)) for sym in range(NUM_SYMBOLS)]
@@ -180,43 +180,45 @@ class SymbolicConsistentAi(Player):
         return self.last_guess
 
     def make_guess(self, feedback):
-        # Full match and symbol match variables for each position
-        fm = [FreshBool("fm_{0}".format(pos)) for pos in range(NUM_POSITIONS)]
-        sm = [[FreshBool("sm_{0}_{1}".format(src_pos, dst_pos)) for dst_pos in range(NUM_POSITIONS)]
-              for src_pos in range(NUM_POSITIONS)]
-
-        # Possible full matches
-        for pos in range(NUM_POSITIONS):
-            self.solver.add(self.secret_vars[pos][self.last_guess[pos]] == fm[pos])
+        # Fresh "full match" variables for each position
+        fm = [FreshBool("fm_{}".format(pos)) for pos in range(NUM_POSITIONS)]
 
         # Full matches must be consistent with feedback
         fm_coeffs = [(fm_pos, 1) for fm_pos in fm]
         self.solver.add(PbEq(fm_coeffs, feedback.full_matches))
 
-        # Possible symbol matches
-        for guess_pos in range(NUM_POSITIONS):
-            match_exprs = list()
-            for secret_pos in range(NUM_POSITIONS):
-                if guess_pos == secret_pos:
-                    continue
-                lhs = list()
-                lhs.append(Not(fm[guess_pos]))
-                lhs.append(self.secret_vars[secret_pos][self.last_guess[guess_pos]])
-                lhs.append(Not(fm[secret_pos]))
+        # Possible full matches
+        for pos in range(NUM_POSITIONS):
+            self.solver.add(self.secret_vars[pos][self.last_guess[pos]] == fm[pos])
 
-                # No previous position in the guess has a symbol match with the current secret_pos
-                lhs.extend([Not(sm[prev_pos][secret_pos]) for prev_pos in range(guess_pos) if secret_pos != prev_pos])
-                # guess_pos has no symbol match with a previous secret_pos
-                lhs.extend([Not(sm[guess_pos][prev_pos]) for prev_pos in range(secret_pos) if guess_pos != prev_pos])
-
-                rhs = sm[guess_pos][secret_pos]
-                match_exprs.append(And(lhs) == rhs)
-            self.solver.add(And(match_exprs))
+        # Fresh "symbol match" variables for each pair of positions
+        sm = [[FreshBool("sm_{}_{}".format(src_pos, dst_pos)) for dst_pos in range(NUM_POSITIONS)]
+              for src_pos in range(NUM_POSITIONS)]
 
         # Symbol matches must be consistent with feedback
-        sm_coeffs = [(sm[guess_pos][secret_pos], 1) for (guess_pos, secret_pos) in
+        sm_coeffs = [(sm[src_pos][dst_pos], 1) for (src_pos, dst_pos) in
                      permutations(range(NUM_POSITIONS), 2)]
         self.solver.add(PbEq(sm_coeffs, feedback.symbol_matches))
+
+        # Possible symbol matches
+        for src_pos in range(NUM_POSITIONS):
+            match_exprs = list()
+            for dst_pos in range(NUM_POSITIONS):
+                if src_pos == dst_pos:
+                    continue
+
+                lhs = list()
+                lhs.append(Not(fm[src_pos]))
+                lhs.append(self.secret_vars[dst_pos][self.last_guess[src_pos]])
+                lhs.append(Not(fm[dst_pos]))
+                # No previous position in the guess has a symbol match with the current dst_pos
+                lhs.extend([Not(sm[prev_pos][dst_pos]) for prev_pos in range(src_pos) if dst_pos != prev_pos])
+                # src_pos has no symbol match with a previous dst_pos
+                lhs.extend([Not(sm[src_pos][prev_pos]) for prev_pos in range(dst_pos) if src_pos != prev_pos])
+
+                rhs = sm[src_pos][dst_pos]
+                match_exprs.append(And(lhs) == rhs)
+            self.solver.add(And(match_exprs))
 
         return self.initial_guess()
 
@@ -233,6 +235,6 @@ def main(player):
 
 if __name__ == "__main__":
     # main(ExplicitConsistentAi())
-    main(ExplicitMinimaxAi())
+    # main(ExplicitMinimaxAi())
     # main(LazyExplicitConsistentAi())
-    # main(SymbolicConsistentAi())
+    main(SymbolicConsistentAi())
