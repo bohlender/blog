@@ -217,7 +217,7 @@ However, despite the small memory footprint, the core problem is that enumerativ
 It would be nice if we could at least manage to compute consistent candidates for the hard instances, but even this problem [is known](https://arxiv.org/abs/cs/0512049) to be [NP-complete](https://en.wikipedia.org/wiki/NP-complete).
 Luckily, we can reduce the problem to another NP-complete problem -- the [Boolean satisfiability problem (SAT)](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) -- and leverage the highly-tuned solvers existing for it.
 
-All we have to do is devise a logical characterisation of the candidates that are consistent with the feedback received so far, and use a SAT solver to acquire such a candidate.
+All we have to do is devise a logical characterisation of the candidates that are consistent with the feedback received so far and use a SAT solver to acquire such a candidate.
 Let's see what kind of variables and constraints we need for this.
 
 ### Encoding the Symbol Mapping
@@ -241,7 +241,7 @@ s_{3,0} + s_{3,1} + s_{3,2} + s_{3,3} + s_{3,4} + s_{3,5} &= 1\\
 \end{aligned}
 {{</ math >}}
 
-If we were to query the satisfiability of our SAT instance now, we would get a satisfying assignment with four of the $s_{\mathit{pos},\mathit{sym}}$ variables set to $\mathit{true}$.
+If we were to query the satisfiability of our SAT instance now, we would get a satisfying assignment with four of the $s_{\mathit{pos},\mathit{sym}}$ variables set to $\mathit{true}$ -- one for each $\mathit{pos}$.
 
 Using the Python bindings for [Z3](https://github.com/Z3Prover/z3/) -- a popular solver for SAT and [SMT](https://en.wikipedia.org/wiki/SMT_solver) instances -- the initialisation of `SymbolicConsistentAi` creates the discussed variables and constraints:
 {{< highlight-file "mastermind.py" Python 152 164 >}}
@@ -255,13 +255,13 @@ Consider the first part of the feedback: the number of full matches.
 This is clearly another cardinality constraint, but this one does not constrain the $s_{\mathit{pos},\mathit{sym}}$ variables directly.
 Instead we need some auxiliary variables
 $$\mathit{fm}_\mathit{pos}$$
-where $\mathit{pos}\in \\\{0,\dots,|s|-1\\\}$ to identify in which position we have a full match.
+where $\mathit{pos}\in \\\{0,\dots,|s|-1\\\}$, to identify in which position we have a full match.
 These are the variables for which we create the constraint.
 Assuming the classic Mastermind setting and some feedback $f=(2,1)$, we simply add:
 $$\mathit{fm_0} + \mathit{fm_1} + \mathit{fm_2} + \mathit{fm_3} = 2$$
 
 Although the $\mathit{fm}\_\mathit{pos}$ variables are now constrained, they are not related to any $s_{\mathit{pos},\mathit{sym}}$ yet.
-Intuitively, $\mathit{fm}_3$ should be $\mathit{true}$, if and only if the symbol at index $3$ of the committed candidate has the same symbol as the secret at index $3$.
+Intuitively, a variable $\mathit{fm}_\mathit{pos}$ should be $\mathit{true}$, if and only if the symbol at index $\mathit{pos}$ of the committed candidate has the same symbol as the secret at index $\mathit{pos}$ -- that's what a full match is.
 With this in mind, and assuming the candidate to have been $c=(3,2,0,1)$, the following constraints establish the missing link:
 
 {{< math >}}
@@ -278,12 +278,12 @@ The first part of `make_guess` mirrors the discussed idea, but introduces fresh 
 
 {{< note >}}
 During development I actually used variables of the form $\mathit{fm}_{\mathit{pos},\mathit{round}}$ to simplify debugging.
-Once done, it was simply more readable to let Z3 pick fresh names for the variables instead of manually generating distinct names for each feedback.
+Once done, it was just more readable to let Z3 pick fresh names for the variables instead of manually generating distinct names for each feedback's full match variables.
 {{</ note >}}
 
 ### Encoding Symbol Matches
 What remains is the creation of constraints which enforce consistency w.r.t. the second part of the feedback: the number of symbol matches.
-Unlike with full match flag that we introduced for every position, a symbol match relates two positions -- one from the guess with one from the secret.
+Unlike the full match <q>flag</q> that we introduced for every position, a symbol match relates two positions -- one from the guess with one from the secret.
 To this end, we introduce the Boolean variables:
 $$\mathit{sm}_{\mathit{src},\mathit{dst}}$$
 where $\mathit{src},\mathit{dst}\in \\\{0,\dots,|s|-1\\\}$.
@@ -313,7 +313,7 @@ $$\bigwedge_{\substack{0\leq\mathit{prev}<\mathit{src}\\\ \mathit{prev} \neq \ma
 * The symbol at index $\mathit{src}$ has not matched any symbol on a smaller (higher priority) position:
 $$\bigwedge_{\substack{0\leq\mathit{prev}<\mathit{dst}\\\ \mathit{prev} \neq \mathit{src}}} \neg \mathit{sm}_{\mathit{src},\mathit{prev}}$$
 
-The rest of `make_guess` -- from the previous section -- implements the proposed encoding:
+The rest of the `make_guess` method -- started in the previous section -- implements the proposed encoding:
 {{< highlight-file "mastermind.py" Python 194 223 >}}
 
 Note that we treat the $\mathit{sm}\_{\mathit{src},\mathit{dst}}$ variables similar to the feedback-specific $\mathit{fm}\_\mathit{pos}$ variables: we introduce fresh ones for every feedback.
@@ -321,7 +321,7 @@ Note that we treat the $\mathit{sm}\_{\mathit{src},\mathit{dst}}$ variables simi
 ### Computing a Guess
 We now have all the constraints together for the $s_{\mathit{pos},\mathit{sym}}$ variables to characterise the code sequences that are consistent with the received feedback.
 To actually compute a guess, we just need to find an assignment that satisfies these constraints.
-Luckily, we can delegate this task to any SAT solver.
+Luckily, we can delegate this task to a SAT solver.
 
 To construct the guess, we identify the $s_{\mathit{pos},\mathit{sym}}$ variables that are set to $\mathit{true}$:
 {{< highlight-file "mastermind.py" Python 166 180 >}}
@@ -329,10 +329,10 @@ To construct the guess, we identify the $s_{\mathit{pos},\mathit{sym}}$ variable
 That's all there is to it.
 Feel free to experiment with [the provided implementations](mastermind.py) of the discussed methods.
 Using the `SymbolicConsistentAi` you can now easily play Mastermind games with huge numbers of secret code combinations.
-On average, it takes $10.51$ guesses to find the secret within $2\\,821\\,109\\,907\\,456$ possible combinations of the classic Mastermind variant with codes of length $16$ (see below).
+On average, it takes only $10.51$ guesses to find the secret within $2\\,821\\,109\\,907\\,456$ possible combinations of the classic Mastermind variant with codes of length $16$ (see experiments below).
 
 ## Experiments
-For reference, I've also run some experiments to measure the performance on a i7-7700K CPU, using Python 3.8 and Z3 v4.8.7.
+For reference, I've run some experiments to measure the performance on an i7-7700K CPU, using Python 3.8 and Z3 v4.8.7.
 The following table provides both a qualitative and quantitative comparison of the lazy enumeration AI and the SAT-based AI, with measurement cells formatted as <q>(Explicit / Symbolic)</q>:
 
 | $\|s\|,\|\Sigma\|$&nbsp; | &nbsp;Games Played&nbsp; | &nbsp;Avg. Turns&nbsp; | &nbsp;Max. Turns&nbsp; | &nbsp;Avg. Game Time&nbsp; | 
@@ -350,12 +350,14 @@ The following table provides both a qualitative and quantitative comparison of t
 Note that, due to the nondeterministic and heuristics-guided nature of SAT solving, the results may vary slightly for your setup.
 {{</ note >}}
 
-As to be expected, the lazy enumeration works well for Mastermind variants with small numbers of possible secrets but becomes unusably slow on harder instances -- omitted measurements are denoted by <q>?</q>.
-Once the average game times went into the seconds, I switched from evaluating the performance for each possible secret to a fixed number of secrets that are evenly spaced over all possible combinations.
+As to be expected, the lazy enumeration works well for Mastermind variants with small numbers of possible secrets but becomes unusably slow on harder instances.
+Such measurements were aborted and are denoted by <q>?</q> in the table.
+Furthermore, once the average game times went into the seconds, I switched from evaluating the performance for each possible secret to a fixed number of secrets that are evenly spaced over all possible combinations.
 Accordingly, for those non-exhaustive runs, the measured maximal number of turns is not a guaranteed worst case.
 
 Although both approaches implement the same idea, i.e. make guesses that are consistent with the feedback, the qualitative results differ.
 This is because our implementation of Shapiro's idea picks the *smallest* consistent candidate but the SAT-based approach picks *some* consistent candidate.
+The latter seems to be advantageous.
 
 ## Do Try This at Home!
 As usual, there is a lot of room for further improvement and experimentation.
