@@ -371,6 +371,6 @@ Here are some points you might want to explore on your own (easiest first):
 * The suggested logical characterisation is just what seemed most straightforward to me.
   Try reformulating the encoding to achieve even better solver performance -- I might have overlooked a thing or two.
 * Investigate whether it is feasible to implement the Minimax-style approach, or some other heuristic, symbolically.
-  Depending on the chose approach, you might want to look into [MAX-SAT](https://en.wikipedia.org/wiki/Maximum_satisfiability_problem) or [(approximate) model counting](https://www.msoos.org/2018/12/how-approximate-model-counting-works/).
+  Depending on the chosen approach, you might want to look into [MAX-SAT](https://en.wikipedia.org/wiki/Maximum_satisfiability_problem) or [(approximate) model counting](https://www.msoos.org/2018/12/how-approximate-model-counting-works/).
 
 {{< list-resources "{*.py}" >}}
