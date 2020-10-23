@@ -39,7 +39,7 @@ We consider horizontal character sequences to be read from left to right, and ve
 Overall, the problem of crossword generation amounts to selecting the subset of words that allows for a placement which is compliant with the rules but also achieves some level of <q>quality</q>.
 While <q>quality</q> may be subjective, the following is an <q>optimal</q> placement for the quality metric I chose:
 
-{{< figure src="gfx/12x12_q103.svg" title="An optimal word placement" width="380px" >}}
+{{< figure src="gfx/12x12_q104.svg" title="An optimal word placement" width="380px" >}}
 
 To really appreciate the result, try to come up with a subset and placement of words that looks better to you or at least contains a similar number of words.
 For reference, you can also give [existing tools](https://duckduckgo.com/?q=best+crossword+puzzle+generator) a try.
