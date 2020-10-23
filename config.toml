@@ -1,4 +1,4 @@
-baseURL = "https://bohlender.github.io/"
+baseURL = "https://bohlender.pro/"
 languageCode = "en-gb"
 title = "Dimitri Bohlender"
 copyright = "© Dimitri Bohlender"
@@ -39,7 +39,7 @@ paginate = 5
 [social]
 		github = "https://github.com/bohlender"
 		facebook = "https://facebook.com/balddenimhero"
-		lastfm = "https://www.last.fm/user/yourdecay"
+		lastfm = "https://www.last.fm/user/balddenimhero"
 
 [menu]
   [[menu.main]]

@@ -12,7 +12,7 @@
 {{ end }}
 <!-- 1) Some nesting is needed to align figcaption with img in all cases -->
 <!-- 2) The figure-nesting is needed (div doesn't work) to prevent their disappearing in ffox reader view -->
-<figure class="figure-outer">
+<figure class="figure-outer" id="{{ .Get "title" | anchorize }}">
     <figure class="{{ .Get `class` | default `figure-inner` }}">
         {{- if $needsLb -}}
             <a class="perfundo__link" href="#perfundo-{{ $res.Name }}">

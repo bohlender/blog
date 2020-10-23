@@ -1,4 +1,6 @@
 - https://validator.w3.org/
+- Article outline as note?
+- Preview images (from a post's images: [..]) in note?
 - Icons not showing up in FF 69.0.2 on SurfaceBook2 (but everywhere else)
 - Temporary 404 page
 
