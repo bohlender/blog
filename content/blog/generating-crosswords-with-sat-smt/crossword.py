@@ -264,5 +264,12 @@ if __name__ == '__main__':
         'LOTUS', 'OUTRUN', 'PIRATES', 'WACKYWHEELS', 'LARRY',
         'EXAPUNKS', 'SKUNNY', 'RAPTOR', 'BLACKTHORNE'
     ]
+    medium = hard + [
+        'LBA', 'LODERUNNER', 'CIVILIZATION', 'SILENTHILL', 'GOTHIC',
+        'CRUSADER', 'TYRIAN', 'MDK', 'CASTLEVANIA', 'STARFLIGHT',
+        'AQUANOX', 'POD', 'JAZZ', 'MONKEYISLAND', 'SPIRITABYSS',
+        'TERRARIA', 'KEEN', 'TIM', 'ARCHON', 'IHNMAIMS', 'SANITARIUM'
+    ]
     generateCrossword(simple, size=4, minQuality=14)
     # generateCrossword(hard, size=12, minQuality=73)
+    # generateCrossword(medium, size=12, minQuality=73)
