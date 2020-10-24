@@ -68,7 +68,7 @@ For example, in the generated [crossword shown above](#an-optimal-word-placement
 Since there is only a finite number of possible placements, a simple way of encoding the placement of a word $w$ in terms of Boolean variables is by means of a variable
 $$w_{x,y,o}$$
 for each position $(x,y)$ within the grid and orientation $o\in\\{\mathit{horizontal},\mathit{vertical}\\}$.
-We will use these placement variables in such a way that 
+We will use these placement variables in such a way that
 $w_{x,y,o}$ being assigned $\mathit{true}$ in the SAT solver's solution will indicate that $w$ should be placed at $(x,y)$ in orientation $o$.
 {{< note >}}
 Of course we could have used two bounded integers $w_x,w_y$ and a Boolean $w_o$ just as well to encode the attributes separately.
@@ -181,7 +181,7 @@ The last and most complex requirement is [rule (5)](#the-problem-statement), whi
 That is, understanding the placed words as vertices of an [undirected graph](https://en.wikipedia.org/wiki/Undirected_graph), which are connected if the words intersect, should result in a graph with only one [connected component](https://en.wikipedia.org/wiki/Connected_component_%28graph_theory%29).
 
 The following figure illustrates the graph corresponding to our [introductory example](#an-optimal-word-placement):
-{{< figure src="gfx/12x12_q101_edgeRelationOfWords.svg" title="Understanding words as vertices" width="380px" >}}
+{{< figure src="gfx/12x12_q104_edgeRelationOfWords.svg" title="Understanding words as vertices" width="380px" >}}
 
 For a fixed graph, computing the components can be [done in linear time](https://en.wikipedia.org/wiki/Connected_component_(graph_theory)#Algorithms), and the connectedness is also easy to see in the above figure.
 However, in our application, the graph is not fixed but parametrised by the solutions to the other constraints.
@@ -195,7 +195,7 @@ Alternatively, by understanding the grid cells as vertices of a graph where the 
 {{< note >}}
 When talking about the neighbours of a cell at position $(x,y)$, we exclude the diagonal neighbours, i.e. we only refer to those at positions $(x, y-1)$, $(x, y+1)$, $(x-1, y)$ and $(x+1, y)$.
 {{< /note >}}
-{{< figure src="gfx/12x12_q101_edgeRelationOfCells.svg" title="Understanding cells as vertices" width="380px" >}}
+{{< figure src="gfx/12x12_q104_edgeRelationOfCells.svg" title="Understanding cells as vertices" width="380px" >}}
 
 Here, the edge relation grows linearly in the number of cells as every cell can at most be connected to four others.
 The size of our word set has no impact.
@@ -241,7 +241,7 @@ The example code actually uses a lower `maxDistance`, which is easy to come up w
 
 To identify states that can reach the <q>start</q> of the connected component within $n$ steps (or less), we introduce the variables
 $$\mathit{reach}_{i,x,y}$$
-for each position $(x,y)$ and maximal distance $i\in[0,\mathit{maxDistance(size)}]$ to the start. 
+for each position $(x,y)$ and maximal distance $i\in[0,\mathit{maxDistance(size)}]$ to the start.
 
 Of course only the <q>start cell</q> can reach itself in zero steps, so we assert
 $$\mathit{reach}_{0,x,y} = \mathit{ccStart}\_{x,y}$$
@@ -276,7 +276,7 @@ By requiring this sum to be greater or equal to a provided `minQuality`, we can 
 That's all there is to it conceptually.
 The [rest of the code](crossword.py) is just generic plumbing to feed the constraints `res` into [Z3](https://github.com/Z3Prover/z3) and interpret the returned assignment of Boolean values to our variables.
 
-## CNF Export 
+## CNF Export
 Although Z3 is feature-rich and state of the art, it nevertheless pays off to use a competitive SAT solver instead for our particular use-case.
 I recommend sticking to SMT solving during development and switching to SAT solving for the more complex instances.
 Z3 provides [tactics](https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-tactics) to reduce the finite-domain SMT constraints to a SAT instance in [CNF](https://en.wikipedia.org/wiki/Conjunctive_normal_form), which can then be exported in the [standard format for SAT solvers](http://www.satcompetition.org/2011/format-benchmarks2011.html):
@@ -298,6 +298,8 @@ As to be expected, the higher the quality requirements are the longer it takes t
 It is easy to see that computing an optimal word placement may be unfeasible in practice: the time investment ramps up significantly as we approach unsatisfiable quality requirements.
 However, even the instances of quality 94 do already look pretty good and are solved by [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) within 188s on average.
 Feel free to process [the measurements](eval.csv) on your own if you're interested in a specific figure.
+
+{{< figure src="gfx/12x12_q95.svg" title="A crossword generated for quality 95" width="380px" >}}
 
 ## Do Try This at Home!
 The presented solution works well for my use case but obviously leaves room for further improvements.
