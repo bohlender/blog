@@ -4,7 +4,7 @@ date: 2020-09-27T16:03:37+02:00
 tags: ["SAT", "Puzzle"]
 draft: true
 math: true
-images: ["gfx/12x12_q103.svg"]
+images: ["gfx/12x12_q104.svg"]
 videos: []
 audio: []
 ---
@@ -296,10 +296,18 @@ Note that the first two configurations -- [cadical](https://github.com/arminbier
 
 As to be expected, the higher the quality requirements are the longer it takes to solve the corresponding SAT instance.
 It is easy to see that computing an optimal word placement may be unfeasible in practice: the time investment ramps up significantly as we approach unsatisfiable quality requirements.
-However, even the instances of quality 94 do already look pretty good and are solved by [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) within 188s on average.
-Feel free to process [the measurements](eval.csv) on your own if you're interested in a specific figure.
+However, even the instances of quality 95 do already look pretty good and are solved by [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) within 336s on average:
 
-{{< figure src="gfx/12x12_q95.svg" title="A crossword generated for quality 95" width="380px" >}}
+{{< figure src="gfx/12x12_q95.svg" title="A crossword of quality 95" width="380px" >}}
+
+Feel free to process [the measurements](eval.csv) on your own if you're interested in specific figures.
+
+If this seems slow to you, keep in mind that **you can speed up the generation process** by providing more words to choose from.
+For example, by adding the following words to our word set, the average time to generate a crossword of quality 95 via [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) reduces from 336s to just 53s.
+
+{{< highlight-file "crossword.py" Python 268 271 >}}
+
+However, when designing a custom crossword, it may be tricky to come up with a large set of words (and witty clues).
 
 ## Do Try This at Home!
 The presented solution works well for my use case but obviously leaves room for further improvements.
