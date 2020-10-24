@@ -1,8 +1,9 @@
 ---
 title: "Generating Crosswords via SAT/SMT"
 date: 2020-09-27T16:03:37+02:00
+publishDate: 2020-10-24
 tags: ["SAT", "Puzzle"]
-draft: true
+draft: false
 math: true
 images: ["gfx/12x12_q104.svg"]
 videos: []
@@ -292,6 +293,7 @@ As implied in the previous section Z3 didn't perform too well on these instances
 
 {{< note >}}
 Note that the first two configurations -- [cadical](https://github.com/arminbiere/cadical/tree/c622a490ec3d9a1a1e998b08120c9b8d0b67a123) and [cryptominisat](https://github.com/msoos/cryptominisat/releases/tag/5.8.0) -- run single-threaded, while both [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) and [cryptominisat -t4](https://github.com/msoos/cryptominisat/releases/tag/5.8.0) use four worker threads on a i7-7700K CPU.
+Some of the experiments, such as the single-threaded ones for quality 100, are still pending but will eventually be incorporated.
 {{< /note >}}
 
 As to be expected, the higher the quality requirements are the longer it takes to solve the corresponding SAT instance.
