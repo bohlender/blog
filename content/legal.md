@@ -3,7 +3,7 @@ title: "Legal"
 date: 2019-08-19T13:32:35+02:00
 draft: false
 description: "Legal notice on warranty, liability, copyright and privacy"
-images: ["portrait.jpg"]
+images: []
 ---
 
 # Disclaimer

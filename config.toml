@@ -16,6 +16,7 @@ paginate = 5
 
 [params]
   description = "Both a portfolio and outlet for all things creative"
+  images = ["portrait.jpg"]
   dateFormat = "January 2, 2006"
 
 	[params.homepage]

@@ -3,7 +3,7 @@ title: "About"
 date: 2019-08-27T00:14:04+02:00
 draft: false
 description: "My condensed CV"
-images: ["portrait.jpg"]
+images: []
 ---
 
 The following rows form a condensed CV. 

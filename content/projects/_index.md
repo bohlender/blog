@@ -3,7 +3,7 @@ title: "Projects"
 date: 2019-09-02T13:33:18+02:00
 draft: false
 description: "A non-exhaustive list of projects I've been involved in, or still am, to varying degrees"
-images: ["portrait.jpg"]
+images: []
 ---
 
 The following is a non-exhaustive list of projects I've been involved in, or still am, to varying degrees.
