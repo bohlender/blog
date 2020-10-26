@@ -335,9 +335,9 @@ Adapt the encoding to optimise for the smallest grid size.
 However, I wonder whether discrete optimisation algorithms would work even better here.
 Analogous to [SMT-LIB](http://smtlib.cs.uiowa.edu/) in the satisfiability community, there is [MiniZinc](https://www.minizinc.org/) to express discrete optimisation problems in a solver-independent way.
 You could give it a try.
-* While I was waiting for my experiments to complete, I stumbled upon [a well-concepted introductory course on programming](https://codingforcrosswords.com/) which uses the example of crossword generation to introduce common ideas in programming.
+* While I was waiting for my experiments to complete, I stumbled upon [a well-conceived introductory course on programming](https://codingforcrosswords.com/) which uses the example of crossword generation to introduce common concepts.
 It is targeted at beginners, but I still watched the parts released so far since it was interesting to see the problem from a different perspective.
-Take a look -- it might help you write an explicit constraint solver.
+Take a look -- it uses tricks which you would also find in a finite-domain solver.
 
 As usual, there are tons of alternatives to encode various aspects of the problem but it is unclear whether they pay off.
 In any case, let me know if you find a better way to generate **personalised** crosswords that meet configurable quality criteria.
