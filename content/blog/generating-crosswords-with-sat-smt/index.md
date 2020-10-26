@@ -19,8 +19,13 @@ In contrast to related approaches, which assume a fixed word placement and searc
 ## The Problem Statement
 When designing a crossword puzzle on a specific theme or topic, one will likely start with **a set of words** (and clever clues) that fit the setting and a rough idea of **the crossword's dimensions**.
 For example, when designing a crossword for a magazine, the page size will probably limit the crossword's width to less than 20 cells to keep the characters legible.
+{{< note >}}
+What makes a crossword *personal* is that the set of words is not taken from some dictionary, but consists of terms that have some significance to the person that is supposed to solve it.
+For example, this could be places they've been to or references to in-jokes.
+{{< /note >}}
 
-For the sake of exposition, assume that we want to design a square crossword of size 12 on the topic of (mostly retro) games and let the following be the words we came up with:
+For the sake of exposition, assume that we want to design a square crossword of size 12 on (mostly retro) games that my friends and family have fond memories of.
+I came up with the following list of games, most of which are classics to us:
 
 {{< highlight-file "crossword.py" Python 256 265 >}}
 
