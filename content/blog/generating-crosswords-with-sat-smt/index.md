@@ -20,7 +20,7 @@ In contrast to related approaches, which assume a fixed word placement and searc
 When designing a crossword puzzle on a specific theme or topic, one will likely start with **a set of words** (and clever clues) that fit the setting and a rough idea of **the crossword's dimensions**.
 For example, when designing a crossword for a magazine, the page size will probably limit the crossword's width to less than 20 cells to keep the characters legible.
 {{< note >}}
-What makes a crossword *personal* is that the set of words is not taken from some dictionary, but consists of terms that have some significance to the person that is supposed to solve it.
+What makes a crossword *personal* is that the words are not taken from some generic dictionary but have some significance to the person that will be solving the crossword.
 For example, this could be places they've been to or references to in-jokes.
 {{< /note >}}
 
@@ -335,12 +335,11 @@ Adapt the encoding to optimise for the smallest grid size.
 However, I wonder whether discrete optimisation algorithms would work even better here.
 Analogous to [SMT-LIB](http://smtlib.cs.uiowa.edu/) in the satisfiability community, there is [MiniZinc](https://www.minizinc.org/) to express discrete optimisation problems in a solver-independent way.
 You could give it a try.
+* While I was waiting for my experiments to complete, I stumbled upon [a well-concepted introductory course on programming](https://codingforcrosswords.com/) which uses the example of crossword generation to introduce common ideas in programming.
+It is targeted at beginners, but I still watched the parts released so far since it was interesting to see the problem from a different perspective.
+Take a look -- it might help you write an explicit constraint solver.
 
 As usual, there are tons of alternatives to encode various aspects of the problem but it is unclear whether they pay off.
 In any case, let me know if you find a better way to generate **personalised** crosswords that meet configurable quality criteria.
-
-<!-- TODO: Update "optimal" solution graphic, once computed -->
-<!-- Update formulas to latest example -->
-<!-- TODO: Create proper visuals -->
 
 {{< list-resources "{*.py,*.csv}" >}}
