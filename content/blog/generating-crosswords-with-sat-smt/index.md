@@ -14,7 +14,7 @@ This made me realise how hard generating <q>high-quality</q> crosswords actually
 Trying to create a crossword from a set of words -- or a subset thereof -- I checked out several tools but found all of them to be based on heuristics and yield rather sparse crosswords.
 
 In line with the general theme of my previous posts, this one illustrates how we can leverage [SAT solving](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) to solve this problem.
-In contrast to related approaches, which assume a fixed word placement and search for fitting words, we consider word placement as part of the problem and eventually end up with an integrated solution to generating crosswords of adjustable quality.
+In contrast to related approaches, which assume a fixed grid structure and search for fitting words, we consider word placement as part of the problem and eventually end up with an integrated solution to generating crosswords of adjustable quality.
 <!--more-->
 ## The Problem Statement
 When designing a crossword puzzle on a specific theme or topic, one will likely start with **a set of words** (and clever clues) that fit the setting and a rough idea of **the crossword's dimensions**.
