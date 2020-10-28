@@ -294,11 +294,11 @@ Following the proposed approach, I generated crosswords of increasing quality an
 Since not all steps of the SAT encoding and solving are fully deterministic, some repetitions are necessary to get a better overview of the solvers' average performance.
 As implied in the previous section Z3 didn't perform too well on these instances and was therefore excluded from the evaluation.
 
-{{< figure src="gfx/eval.svg" title="Solving time for varying SAT solvers and qualities" >}}
+{{< figure src="gfx/eval_51words.svg" title="Solving time for varying SAT solvers and qualities [given 51 words]" >}}
 
 {{< note >}}
-Note that the first two configurations -- [cadical](https://github.com/arminbiere/cadical/tree/c622a490ec3d9a1a1e998b08120c9b8d0b67a123) and [cryptominisat](https://github.com/msoos/cryptominisat/releases/tag/5.8.0) -- run single-threaded, while both [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) and [cryptominisat -t4](https://github.com/msoos/cryptominisat/releases/tag/5.8.0) use four worker threads on a i7-7700K CPU.
-Some of the experiments, such as the single-threaded ones for quality 100, are still pending but will eventually be incorporated.
+Note that the first two configurations ([cadical](https://github.com/arminbiere/cadical/tree/c622a490ec3d9a1a1e998b08120c9b8d0b67a123) and [cryptominisat](https://github.com/msoos/cryptominisat/releases/tag/5.8.0)) run single-threaded, while both [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) and [cryptominisat -t4](https://github.com/msoos/cryptominisat/releases/tag/5.8.0) use four worker threads on a i7-7700K CPU.
+Some of the experiments, such as the single-threaded ones for quality 100, are still pending but I will probably not finish those as proper evaluation would take unreasonably long.
 {{< /note >}}
 
 As to be expected, the higher the quality requirements are the longer it takes to solve the corresponding SAT instance.
@@ -307,13 +307,14 @@ However, even the instances of quality 95 do already look pretty good and are so
 
 {{< figure src="gfx/12x12_q95.svg" title="A crossword of quality 95" width="380px" >}}
 
-Feel free to process [the measurements](eval.csv) on your own if you're interested in specific figures.
+Feel free to process [the measurements](eval_51words.csv) on your own if you're interested in specific figures.
 
 If this seems slow to you, keep in mind that **you can speed up the generation process** by providing more words to choose from.
-For example, by adding the following words to our word set, the average time to generate a crossword of quality 95 via [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) reduces from 336s to just 53s.
+For example, by adding the following words to our word set, the average time to generate a crossword of quality 95 via [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) reduces from 336s to just 45s.
 
-{{< highlight-file "crossword.py" Python 268 271 >}}
+{{< figure src="gfx/eval_73words.svg" title="Solving time for varying SAT solvers and qualities [given 73 words]" >}}
 
+For higher quality requirements, additional words may improve the runtime by more than an order-of-magnitude (cf. times for quality 100).
 However, when designing a custom crossword, it may be tricky to come up with a large set of words (and witty clues).
 
 ## Do Try This at Home!
