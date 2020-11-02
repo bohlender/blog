@@ -220,7 +220,7 @@ Clearly, $\mathit{ccStart}_y$ must be $\mathit{true}$ for the first row that is 
 
 {{< math >}}
 \begin{aligned}
-\mathit{ccStart}_y =&~ \bigwedge_{0\leq x < \mathit{size}} \mathit{grid}_{x,y} \neq \mathit{empty}\\
+\mathit{ccStart}_y =&~ \bigvee_{0\leq x < \mathit{size}} \mathit{grid}_{x,y} \neq \mathit{empty}\\
 \wedge&~ \bigwedge_{0\leq i < y} \neg \mathit{ccStart}_i
 \end{aligned}
 {{< /math >}}
