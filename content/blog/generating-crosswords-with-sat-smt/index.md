@@ -312,6 +312,7 @@ Feel free to process [the measurements](eval_51words.csv) on your own if you're 
 If this seems slow to you, keep in mind that **you can speed up the generation process** by providing more words to choose from.
 For example, by adding the following words to our word set, the average time to generate a crossword of quality 95 via [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) reduces from 336s to just 45s.
 
+{{< highlight-file "crossword.py" Python 268 271 >}}
 {{< figure src="gfx/eval_73words.svg" title="Solving time for varying SAT solvers and qualities [given 73 words]" >}}
 
 For higher quality requirements, additional words may improve the runtime by more than an order-of-magnitude (cf. times for quality 100).
