@@ -13,7 +13,7 @@ While there is a [mathematical explanation](https://web.archive.org/web/20160308
 This post illustrates how this, and related aspects, can be investigated with [SMT](https://en.wikipedia.org/wiki/Satisfiability_modulo_theories)-based reasoning about the actual implementation.
 <!--more-->
 ## Introduction
-Computing the "inverse" square root $1/\sqrt{x}$ is a common operation in 3D computer graphics since it occurs naturally during [vector normalisation](https://en.wikipedia.org/wiki/Unit_vector).
+Computing the reciprocal or "multiplicative inverse" square root $1/\sqrt{x}$ is a common operation in 3D computer graphics since it occurs naturally during [vector normalisation](https://en.wikipedia.org/wiki/Unit_vector).
 However, in the '90s, its precise computation was computationally expensive, and high numbers of such computations in every frame of a real-time graphics application could lead to stuttering and dropping of the framerate.
 With this in mind, it is not surprising that the "fast inverse square root" is often associated with [Quake III Arena](https://en.wikipedia.org/wiki/Quake_III_Arena) -- a multiplayer-player focussed first-person shooter from 1999 that made use of this approximation to avoid the computational cost of the real thing, without losing "too much" precision.
 
