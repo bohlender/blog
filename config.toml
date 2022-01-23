@@ -1,6 +1,6 @@
 baseURL = "https://bohlender.pro/"
 languageCode = "en-gb"
-title = "Dimitri Bohlender"
+title = "bohlender.pro"
 copyright = "© Dimitri Bohlender"
 
 pygmentsCodefences = true
@@ -21,10 +21,11 @@ paginate = 5
 
 	[params.homepage]
 		portrait = "/portrait.jpg"
-		job = "Research Associate"
+		job = "Software Engineer"
 		topics = ["Formal Methods", "Modelling & Verification"]
-		description = ["I am a PhD candidate in Computer Science at Informatik 11 - Embedded Software, RWTH Aachen University, and about to finish it in 2020.",
-                   "Since I value authenticity, this site serves as both a portfolio and a personal website."]
+		description = ["I'm a software engineer with background in formal methods research. I formalise systems, develop decision procedures and care about consistency, precision and well-defined semantics in speech, writing, code & models. I'm currently working at INFORM.",
+                   "Since I value authenticity this site serves as both a portfolio and a personal website."]
+
   [params.blog]
     description = "Thoughts on formal methods, computer science, art & society"
   [[params.cvSections]]
@@ -39,7 +40,6 @@ paginate = 5
 
 [social]
 		github = "https://github.com/bohlender"
-		facebook = "https://facebook.com/balddenimhero"
 		lastfm = "https://www.last.fm/user/balddenimhero"
 
 [menu]

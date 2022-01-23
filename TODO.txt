@@ -1,20 +1,26 @@
+Must:
+- pre-deployment: check for deadlinks
 - https://validator.w3.org/
-- Article outline as note?
 - Preview images (from a post's images: [..]) in note?
+
+- Update current work
+
+May:
+- Improve reader view experience in FF (source looks bad)
+- Get rid of KaTeX JS
+  - branch hugo & prerender math?
+
+- Article outline as note?
 - Icons not showing up in FF 69.0.2 on SurfaceBook2 (but everywhere else)
 - Temporary 404 page
-
 - Proper 404 page
   - Trainer Scroller?
   - flickering nixie tubes? 0.00404 -- the requested page does not exist in this timeline
   - doom font 404 & fire effect?
   - morsecode?
   - https://www.reddit.com/r/VaporwaveAesthetics/comments/cu79m4/maintenance_is_being_preformed/?)
-  - Outrun/synthwavey parallax scrolling with 404-sun?
+  - Outrun/synthwavey parallax scrolling with 404-coffee-sun (plane=notepad)?
 
-
-Nice to have
-============
 - Fix tag padding-top being off in _some_ versions of IE11
 - Custom syntax highlighting theme (matching the site's colours)
 - Favicon / Logo
@@ -27,7 +33,6 @@ Nice to have
 - Make template-generated source readable
 - Refactor CSS ¯\_(ツ)_/¯
 
-- Get rid of KaTeX JS -- branch hugo & prerender math
 - Better images than the portrait for opengraph
 - Use schema.org microdata to alter the appearance of search engine results
 
