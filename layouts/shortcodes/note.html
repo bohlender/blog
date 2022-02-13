@@ -1,4 +1,5 @@
-<aside>
+{{ $id := (.Get "id") }}
+<aside {{ if $id }} id="{{ $id }}" {{ end }}>
     {{- $markdown := .Inner | markdownify -}}
     {{ $hasP := strings.Contains $markdown "<p>" }}
     {{ if not $hasP }}<p>{{ end }}

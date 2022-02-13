@@ -12,7 +12,7 @@ audio: []
 Back in the day, [Mastermind](https://en.wikipedia.org/wiki/Mastermind_(board_game)) was a popular two player code-breaking game, and many [variations thereof](https://en.wikipedia.org/wiki/Mastermind_(board_game)#Variations) still exist as both standalone games and puzzles within other games.
 Although it is difficult for a human player to make *optimal guesses* of the secret code, or at least guesses that do not conflict with the provided clues, the setting is usually simple enough for an AI to find such candidates via explicit exploration of the [game tree](https://en.wikipedia.org/wiki/Game_tree).
 
-However, such approaches becomes unfeasible when the number of possibilities for secret codes grows into the millions.
+However, such approaches become unfeasible when the number of possibilities for secret codes grows into the millions.
 This post illustrates the problem with standard approaches, and how finding consistent candidates can be approached with [SAT](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) solving -- yielding an AI that can handle orders-of-magnitude harder Mastermind instances.
 <!--more-->
 ## Introduction
