@@ -116,8 +116,8 @@ What distinguishes an instance are the ten **patterns that can be observed on th
 Just as $\mathit{digitSegment}$ characterises the segments behind each possible digit, the idea here is to introduce a predicate
 $$\mathit{patternSegment}: \underset{\overbrace{\\{0,1,2,3,4,5,6,7,8,9\\}}}{\mathit{Index}} \times \mathit{Segment}$$
 to characterise the segments behind each of the ten observable patterns.
-That is, assert for all indices $i$ and segments $s$:
-$$\tag{4}\mathit{patternSegment}(i,s) \iff s \text{ is a segment of the $i$-th pattern}$$
+That is, assert for all indices $i$ and segments $s$ that
+$$\tag{4}\mathit{patternSegment}(i,s) \iff s \text{ is a segment of the $i$-th pattern}.$$
 
 {{<note>}}
 Even though the domains $\mathit{Digit}$ and $\mathit{Index}$ seem to be equal they model different things.
@@ -135,7 +135,7 @@ here, too.
 
 The only thing that remains to be formalised is the **relation between the observed patterns and the other "objects"**.
 That's the actual puzzle.
-What we know from the puzzle description that each of the observable patterns matches the permuted segments of some digit.
+What we know from the puzzle description is that each of the observable patterns matches the permuted segments of some digit.
 Therefore, there must be a "decoding function"
 $$\mathit{Idx2dig}: \mathit{Index} \to \mathit{Digit}$$
 which maps each observed pattern -- more precisely its index $i$ -- in such a way to a digit $d$ that the permuted segments of $d$ correspond to the observed pattern.
@@ -157,7 +157,7 @@ s = s' &\iff \mathit{Perm}(s) = \mathit{Perm}(s')\\
 {{</math>}}
 for all $d\in\mathit{Digit}$, $s,s'\in\mathit{Segment}$, and indices $i\in\mathit{Index}$.
 
-If we now manage to find an interpretation of the uninterpreted symbols that satisfies all these constraints, the puzzle instance will be solved.
+If we now manage to find an interpretation of the uninterpreted symbols that satisfies all these constraints, the particular puzzle instance will be solved.
 We can then simply use $\mathit{Idx2dig}$ to map the patterns on the malfunctioning four-digit seven-segment display back to digits, or use $\mathit{Perm}$ to undo the permutation of segments.
 
 ## Solving the Puzzle via Z3
@@ -191,7 +191,7 @@ This lets you see for yourself how a logic impacts modelling convenience, size o
 
 ### Solving the Puzzle Incrementally
 To solve the overall puzzle, we have to solve the 200 independent problem instances described in the [input file](input.txt) and combine their solutions.
-Although it is possible to construct and solve the instances' constraints independently, as all of the [suggested solutions](https://www.reddit.com/r/adventofcode/comments/rbwnh5/2021_day_8_can_it_be_solved_as_a_constraint/) do, it is more efficient to avoid starting from scratch 200 times.
+Although it is possible to construct and solve the instances' constraints independently, as most of the [suggested solutions](https://www.reddit.com/r/adventofcode/comments/rbwnh5/2021_day_8_can_it_be_solved_as_a_constraint/) do, it is more efficient to avoid starting from scratch 200 times.
 Closer inspection of constraints $(1)--(5)$ shows that the instances' formalisations only differ in $(4)$, i.e. the definition of $\mathit{patternSegment}$.
 Therefore, a simple way to avoid starting from scratch is by first adding the core constraints $(1)--(3),(5)$ to the solver's stack of constraints and then iteratively checking satisfiability with each of the 200 variants of $(4)$ swapped in at the top of the stack.
 
@@ -202,7 +202,7 @@ The latter is [more incremental](https://github.com/Z3Prover/z3/issues/1152#issu
 
 The following encoding-agnostic procedure implements the suggested approach.
 It uses the scope management operations [`push` and `pop`](https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-scopes) to replace the definition of $\mathit{patternSegment}$ between satisfiability checks.
-When a satisfying interpretation -- a so called model -- is found we can inspect it to learn how the observed patterns map to digits:
+When a satisfying interpretation -- a so called model -- is found, we can inspect it to learn how the observed patterns map to digits:
 {{<highlight-file "aoc08.py" Python 53 72>}}
 
 The procedure is encoding-agnostic, in the sense that it only expects the characterisation code to implement the following self-explanatory interface:
@@ -267,11 +267,11 @@ Dropping the quantifiers does not entail any changes to the declared symbols, bu
 {{<highlight-file "aoc08.py" Python 137 148>}}
 
 The approach to get rid of a forall quantifier is simple: just **explicitly enumerate the values and assert the nested constraint for each**.
-This leaves us with a increased number of constraints but spares Z3 the necessity of dealing with quantifiers:
+This leaves us with an increased number of constraints but spares Z3 the necessity of dealing with quantifiers:
 {{<highlight-file "aoc08.py" Python 150 172>}}
 
 Aside from the substitution of quantification by iteration, the code is effectively the same as in our [first encoder](#high-level-encoding).
-I find this version even more readable that the previous one, mostly because it is so easy to express <q>$s \text{ is a segment of }d$</q> for a concrete pair $(d,s)$.
+I find this version to be even more readable that the previous one, mostly because it is so easy to express <q>$s \text{ is a segment of }d$</q> for a concrete pair $(d,s)$.
 
 The rest of the encoder does not provide any new insights and is only shown for the sake of completeness:
 {{<highlight-file "aoc08.py" Python 174 185>}}
@@ -308,7 +308,7 @@ We can now use the freshly introduced variables within our constraints, in place
 This does complicate constraints where we previously had nested function applications, such as $(3)$ and $(5)$.
 Here, the idea is similar to the [alternative formulation](#stepwise-composition) of $(3)$: we constrain the result of the outer function application depending on the result of the nested function application.
 However, without uninterpreted functions, some constraint simplification opportunities may become more obvious, too.
-Since the domain and value range of $\mathit{perm}$ are equal, the bijectivity constraint can be simplified to "different applications of $\mathit{perm}$ return distinct segments":
+Since the domain and value range of $\mathit{perm}$ are equal the bijectivity constraint can be simplified to "distinct applications of $\mathit{perm}$ return distinct segments":
 {{<highlight-file "aoc08.py" Python 201 224>}}
 
 As with the previous encodings, the rest of the code holds no surprises and is merely listed for the sake of completeness:
@@ -327,7 +327,7 @@ There are several things you can do to squeeze out better execution times:
 * Avoid recreating the constraints for each variant.
   They have the same form anyway.
   Instead, try to come up with a way to leverage [solving under assumptions](https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-assumptions), i.e. delete `encode_variant` and rather communicate the observed patterns by passing appropriate assumptions to the `check` function.
-* Instead of solving each of the 200 problem instances separately, try to combine them all into a single set of constraints.
+* Alternatively, instead of solving each of the 200 problem instances separately, try to combine them all into a single set of constraints.
   A single invocation of `check` shall suffice to solve the complete puzzle.
 * Assuming you do implement the above suggestion, try feeding the constraints to a dedicated SAT solver for another performance gain.
   Have a look at [this section](/blog/generating-crosswords-with-sat-smt/#cnf-export) from a previous post, if you need some guidance on how to do this.
