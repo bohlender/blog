@@ -1,6 +1,7 @@
 ---
 title: "Solving the \"Seven Segment Search\" Puzzle with Z3"
 date: 2022-01-22T15:06:54+01:00
+publishDate: 2022-02-13
 tags: ["SMT", "Puzzle", "Advent of Code"]
 draft: false
 math: true
@@ -9,9 +10,9 @@ videos: []
 audio: []
 ---
 This week I stumbled upon [someone wondering](https://www.reddit.com/r/adventofcode/comments/rbwnh5/2021_day_8_can_it_be_solved_as_a_constraint/) whether the **second part** of the recent [Advent of Code puzzle "Seven Segment Search"](https://adventofcode.com/2021/day/8) can be expressed as a constraint satisfaction problem.
-As attested by the replies and solutions: yes, it can.
-However, to my mind, the solutions could be more instructive and raise awareness for some of the tradeoffs or solver misuses they put up with.
-This post tries to do better.
+As attested by the replies: yes, it can.
+However, I think the question deserves a more extensive discussion than just a few comments in a thread.
+This post tries to provide a more instructive answer and raise awareness for some of the tradeoffs or solver misuses some solutions put up with.
 
 I assume that the reader is familiar with mathematical notation and
 - just struggles to express the posed problem in a formal, declarative way, _or_
@@ -55,7 +56,7 @@ However, in general, such procedures may require significant alterations and re-
 
 Declarative approaches, which merely rely on a description of _what_ a solution to a problem is, rather than _how_ to find it, tend to be less prone to this.
 Therefore, instead of investing in a solution procedure tailored to a specific problem from the start, it may be sensible to first express the problem in a declarative formalism for which generic solvers exist.
-If, at some point, the tradeoff between flexibility and performance becomes problematic, one can still look into designing a dedicated procedure.
+If, at some point, the tradeoff between flexibility and performance becomes problematic, one can still look into designing a problem-specific, imperative procedure.
 
 {{<note>}}
 This is similar to a common approach for solving math word problems.
@@ -65,33 +66,33 @@ This system can then be solved by some generic procedure that doesn't even know 
 {{</note>}}
 
 In the following, we will use [first-order logic](https://en.wikipedia.org/wiki/First_order_logic) to express the puzzle in a formal, declarative way.
-This is a reasonably high-level logic which allows us to conveniently express the relations between the problem's entities and is amenable to automated theorem proving.
+This is a reasonably high-level logic which allows us to conveniently express the relations between the problem's entities, and is amenable to automated theorem proving.
 
 ### Characterisation in First-Order Logic
 Let us start by formalising the thing we know: **how each digit maps to a set of segments on a (functioning) seven-segment display**.
 In first-order logic sets are characterised by predicates.
-For example, if the domain of discourse is $\mathbb{Z}$, predicate $p(x) := x<0$ chracterises the set of negative integers.
-Accordingly, to characterise the segments of each digit $d$, we could define 10 predicates $\mathit{segments}_d(s)$.
-However, it is probably more convenient to let one binary predicate
-$$\mathit{digitSegments}:\underset{\overbrace{\\{0,1,2,3,4,5,6,7,8,9\\}}}{\mathit{Digit}}\times \underset{\overbrace{\\{a,b,c,d,e,f,g\\}}}{\mathit{Segment}}$$
+For example, if the domain of discourse is $\mathbb{Z}$, predicate $\mathit{neg}(x) := x<0$ chracterises the set of negative integers.
+Accordingly, to characterise the segments of each digit $d$, we could define 10 predicates $\mathit{segment}_d(s)$.
+However, it is probably more convenient to let *one* binary predicate
+$$\mathit{digitSegment}:\underset{\overbrace{\\{0,1,2,3,4,5,6,7,8,9\\}}}{\mathit{Digit}}\times \underset{\overbrace{\\{a,b,c,d,e,f,g\\}}}{\mathit{Segment}}$$
 characterise the digit's segments.
 That is, require the following to hold
-$$\tag{1}\mathit{digitSegments}(d,s) \iff s \text{ is a segment of } d$$
+$$\tag{1}\mathit{digitSegment}(d,s) \iff s \text{ is a segment of } d$$
 for all digits $d$ and segments $s$.
 
-We'd like to have a similar characterisation of the **mapping of digits to segments on the broken seven-segment display**, but that can't be stated directly as it depends on the (unknown) [permutation](https://en.wikipedia.org/wiki/Permutation) of segments -- or wires, if you will.
+We'd like to have a similar characterisation of the **mapping of digits to segments on the broken seven-segment display**, but that can't be stated directly as it depends on the (unknown) [permutation](https://en.wikipedia.org/wiki/Permutation) of segments, or wires, if you will.
 Therefore, to first model the permutation, we introduce an uninterpreted function
 $$\mathit{Perm}:\mathit{Segment}\to\mathit{Segment}$$
 but restrict the possible interpretations of $\mathit{Perm}$ to permutations only.
 This is achieved by requiring the function to be bijective:
 $$\tag{2}\forall s,s'\in\mathit{Segment}\ldotp s = s' \iff \mathit{Perm}(s) = \mathit{Perm}(s')$$
 {{<note>}}
-In contrast to the predicate $\mathit{digitSegments}$, whose [extension](https://en.wikipedia.org/wiki/Extension_(predicate_logic)) is provided, $\mathit{Perm}$ is an *uninterpreted* symbol.
+In contrast to the predicate $\mathit{digitSegment}$, whose [extension](https://en.wikipedia.org/wiki/Extension_(predicate_logic)) is provided, $\mathit{Perm}$ is an *uninterpreted* symbol.
 We follow the convention of logic programming literature and capitalise uninterpreted symbols.
 {{</note>}}
 
-Based on that, we can now characterise the permuted digit segments
-$$\mathit{PermDigitSegments}:\mathit{Digit}\times \mathit{Segment}$$
+Based on that we can now characterise the permuted digit segments
+$$\mathit{PermDigitSegment}:\mathit{Digit}\times \mathit{Segment}$$
 by specifying that $\mathit{Perm}(s)$ must be a permuted segment of $d$ iff $s$ is a segment of $d$ on the functioning display:
 $$\tag{3}\mathit{PermDigitSegment}(d,\mathit{Perm}(s)) \iff \mathit{digitSegment}(d,s)$$
 
@@ -112,7 +113,7 @@ Note that so far we've only formalised aspects that are common to all problem in
 Even the permutation $\mathit{Perm}$, which differs from instance to instance, could be introduced without referring to instance-specific details.
 
 What distinguishes an instance are the ten **patterns that can be observed on the (malfunctioning) display**, i.e. the first part of each line of the input file.
-Just as $\mathit{digitSegments}$ characterises the segments behind each possible digit, the idea here is to introduce a predicate
+Just as $\mathit{digitSegment}$ characterises the segments behind each possible digit, the idea here is to introduce a predicate
 $$\mathit{patternSegment}: \underset{\overbrace{\\{0,1,2,3,4,5,6,7,8,9\\}}}{\mathit{Index}} \times \mathit{Segment}$$
 to characterise the segments behind each of the ten observable patterns.
 That is, assert for all indices $i$ and segments $s$:
@@ -147,7 +148,7 @@ for all indices $i$ and segments $s$.
 Overall, we end up with the following constraints
 {{<math>}}
 \begin{aligned}
-\mathit{digitSegments}(d,s) &\iff s \text{ is a segment of } d\\
+\mathit{digitSegment}(d,s) &\iff s \text{ is a segment of } d\\
 s = s' &\iff \mathit{Perm}(s) = \mathit{Perm}(s')\\
 \mathit{PermDigitSegment}(d,\mathit{Perm}(s)) &\iff \mathit{digitSegment}(d,s)\\
 \mathit{patternSegment}(i,s) &\iff s \text{ is a segment of the $i$-th pattern}\\
@@ -290,8 +291,8 @@ Essentially, it is possible to encode the $k=|D|$ distinct values of a finite do
 {{</note>}}
 
 Now, how do we get rid of the uninterpreted functions?
-Since all of our functions have finite domains, it is be possible to introduce symbolic values to **replace each possible function application** in our constraints.
-That is, for each function and input, introduce a variable to denote the result.
+Since all of our functions have finite domains, it is possible to introduce symbolic values to **replace each possible function application** in our constraints.
+That is, for each function and input, we introduce a variable to denote the result.
 This of course impacts the symbols we declare. 
 For example, where we previously used an uninterpreted function
 $$\mathit{digitSegment}:\mathit{Digit}\times\mathit{Segment}\to\mathbb{B}$$
@@ -305,28 +306,30 @@ I just like naming the variables like the function applications they replace.
 
 We can now use the freshly introduced variables within our constraints, in place of the original function applications.
 This does complicate constraints where we previously had nested function applications, such as $(3)$ and $(5)$.
-Here, the idea is similar to the [alternative formalisation](#stepwise-composition) of $(3)$: we constrain the result of the outer function application depending on the result of the nested function application.
-However, without uninterpreted functions, some constraint simplification opportunities can become more obvious, too.
-Since the domain and value range of $\mathit{perm}$ are equal, $(2)$ amounts to requiring the result for every input to be distinct:
+Here, the idea is similar to the [alternative formulation](#stepwise-composition) of $(3)$: we constrain the result of the outer function application depending on the result of the nested function application.
+However, without uninterpreted functions, some constraint simplification opportunities may become more obvious, too.
+Since the domain and value range of $\mathit{perm}$ are equal, the bijectivity constraint can be simplified to "different applications of $\mathit{perm}$ return distinct segments":
 {{<highlight-file "aoc08.py" Python 201 224>}}
 
-As with the previous encodings, the rest of the encoder holds no surprises and is merely listed for the sake of completeness:
+As with the previous encodings, the rest of the code holds no surprises and is merely listed for the sake of completeness:
 {{<highlight-file "aoc08.py" Python 226 237>}}
 
 This is where we stop tweaking the encoding.
 You will find that running `solve_puzzle` with an instance of `LowLevelEncoder` again reduces the runtime significantly (to ~1s).
 
 ## Do Try This at Home
-Interestingly, each `check` in `solve_puzzle` takes only about 500µs if an instance of `LowLevelEncoder` is used.
-So why does `solve_puzzle` take 1s? That's an order of magnitude longer than 200 times 500µs.
-Profiling shows that most time wasted in the bindings -- specifically in `ExprRef.__eq__`.
+Interestingly, if the `LowLevelEncoder` is used, each `check` in `solve_puzzle` takes only about 500µs.
+So why does `solve_puzzle` take 1s? That's an order of magnitude longer than 200 times 500µs!
+Well, running a profiler shows that most time is wasted in the bindings -- specifically in `ExprRef.__eq__`.
 
 There are several things you can do to squeeze out better execution times:
 * Now that you've seen how to express the constraints with the Python bindings, give the [bindings for C++](https://z3prover.github.io/api/html/namespacez3.html) -- or some other language with less overhead than Python -- a try.
-* Avoid recreating the constraints in `encode_variant`.
-  Instead try to come up with a way to leverage [solving under assumptions](https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-assumptions), i.e. avoid `encode_variant` and rather pass some assumptions to `check` which define $\mathit{patternSegment}$.
-* Instead of solving each of the 200 problem instances separately try to combine them all into a single set of constraints, s.t. a single invocation of `check` will suffice to solve the complete puzzle.
-* Assuming you do implement the above suggestion, try feeding the constraints to a dedicated SAT solver for another performance bump.
-  Have a look at [this section](/blog/generating-crosswords-with-sat-smt/#cnf-export) in a previous post, if you need some guidance on how to do this.
+* Avoid recreating the constraints for each variant.
+  They have the same form anyway.
+  Instead, try to come up with a way to leverage [solving under assumptions](https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-assumptions), i.e. delete `encode_variant` and rather communicate the observed patterns by passing appropriate assumptions to the `check` function.
+* Instead of solving each of the 200 problem instances separately, try to combine them all into a single set of constraints.
+  A single invocation of `check` shall suffice to solve the complete puzzle.
+* Assuming you do implement the above suggestion, try feeding the constraints to a dedicated SAT solver for another performance gain.
+  Have a look at [this section](/blog/generating-crosswords-with-sat-smt/#cnf-export) from a previous post, if you need some guidance on how to do this.
 
 {{<list-resources "{*.py,*.txt}">}}
