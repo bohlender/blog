@@ -3,12 +3,13 @@ languageCode = "en-gb"
 title = "bohlender.pro"
 copyright = "© Dimitri Bohlender"
 
-pygmentsCodefences = true
-pygmentsStyle = "monokai"
 paginate = 5
 
-[markup.goldmark.renderer]
-  unsafe = true
+[markup]
+  [markup.highlight]
+    style = 'monokai'
+  [markup.goldmark.renderer]
+    unsafe = true
 
 [author]
   name = "Dimitri Bohlender"
@@ -79,4 +80,4 @@ paginate = 5
     weight = 10
 
 [imaging]
-resampleFilter = "Lanczos"
+  resampleFilter = "Lanczos"
