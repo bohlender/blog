@@ -2,7 +2,6 @@ Must:
 - pre-deployment: check for deadlinks
 - https://validator.w3.org/
 - KaTeX font size seems off; math shortcode (div) is hacky
-- highlight inline code
 
 - Update current work
 

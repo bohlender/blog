@@ -281,6 +281,10 @@ code {
 	line-height: initial;
 	font-size: 0.88rem;
 	@include monospaceFont();
+
+	background-color: $colour1;
+	padding: 0.05em 0.3em;
+	border-radius: 5px;
 }
 
 pre { overflow-x: auto; }
@@ -396,6 +400,12 @@ ol > li:before {
 	border-radius: 5px;
 	div, table, pre { border-radius: 5px; }
 	& > pre { padding: 5px; }
+
+	code {
+		background-color: unset;
+		padding: unset;
+		border-radius: unset;
+	}
 }
 .highlight-figure {
 	border: 1px solid #ddd;
