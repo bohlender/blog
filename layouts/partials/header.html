@@ -7,7 +7,7 @@
 		<ul class="dropdown">
 			{{- $curPage := . }}
 			{{- range .Site.Menus.main}}
-			{{- $isSelected := eq $curPage.URL .URL }}
+			{{- $isSelected := eq $curPage.RelPermalink .URL }}
 			<li><a {{ with $isSelected }}class="selected" {{ end }}href="{{ .URL }}">{{ .Name }}</a></li>
 			{{- end }}
 		</ul>
