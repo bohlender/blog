@@ -1,11 +1,13 @@
 <header>
 	<nav>
-		<input type="checkbox" id="show-menu" role="button">
+		<label for="show-menu" class="show-menu">
+			<img class="icon" src="/gfx/fa-icons.svg#bars"/>
+		</label>
+		<input type="checkbox" id="show-menu" role="button" aria-pressed="true">
 		<ul class="dropdown">
 			{{- $curPage := . }}
-			<label for="show-menu" class="show-menu"><img class="icon" src="/gfx/fa-icons.svg#bars" /></label>
 			{{- range .Site.Menus.main}}
-			{{- $isSelected := $curPage.IsMenuCurrent "main" . }}
+			{{- $isSelected := eq $curPage.URL .URL }}
 			<li><a {{ with $isSelected }}class="selected" {{ end }}href="{{ .URL }}">{{ .Name }}</a></li>
 			{{- end }}
 		</ul>

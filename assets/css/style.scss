@@ -518,14 +518,21 @@ header {
 		display: flex;
 		position: relative;
 		
-		.selected {	color: $colour1;	}
+		.selected { color: $colour1; }
 		@include hoverLink();
 		
 		input {display: none;}
 
 		.show-menu {
+			position: absolute;
+			top: 12px;
+			right: 6px;
+
+			margin: 10px 20px;
+
 			cursor: pointer;
 			@include noselect();
+			z-index: 3; // Must be above .dropdown
 		}
 	}
 	@media screen and (max-width: $tabletWidth){
@@ -535,12 +542,11 @@ header {
 			.dropdown {
 				position: absolute;
 				top: 6px;
-				right: 0;
-				z-index: 2;
+				z-index: 2; // Must be above RSS cup on blog
 			
 				border-radius: 5px;
 				margin: 10px 20px;
-				padding: 6px;
+				padding: 35px 6px 6px 6px;
 			
 				.fa-bars {
 					cursor: pointer;
