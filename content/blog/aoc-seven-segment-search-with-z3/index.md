@@ -12,7 +12,7 @@ audio: []
 This week I stumbled upon [someone wondering](https://www.reddit.com/r/adventofcode/comments/rbwnh5/2021_day_8_can_it_be_solved_as_a_constraint/) whether the **second part** of the recent [Advent of Code puzzle "Seven Segment Search"](https://adventofcode.com/2021/day/8) can be expressed as a constraint satisfaction problem.
 As attested by the replies: yes, it can.
 However, I think the question deserves a more extensive discussion than just a few comments in a thread.
-This post tries to provide a more instructive answer and raise awareness for some of the tradeoffs or solver misuses some solutions put up with.
+This post tries to provide a more instructive answer and raise awareness for the tradeoffs or solver misuses some solutions put up with.
 
 I assume that the reader is familiar with mathematical notation and
 - just struggles to express the posed problem in a formal, declarative way, _or_
@@ -21,9 +21,11 @@ It takes only few steps to get from a quantifier-laden high-level formulation to
 <!--more-->
 ## The Problem Statement
 A functioning [seven-segment display](https://en.wikipedia.org/wiki/Seven-segment_display) is supposed to represent digits as follows:
+
 {{<figure src="gfx/display_good.svg" title="Random digits on a functioning display" width="450px">}}
 
 By associating each segment with a character, we can clearly describe which segments are supposed to light up for each digit:
+
 {{<highlight-file "aoc08.py" Python 4 15>}}
 
 The crux of the [Seven Segment Search](https://adventofcode.com/2021/day/8) puzzle is that we are faced with a seven-segment display whose wiring got mixed up.
@@ -31,9 +33,11 @@ As a result, instead of turning on segments `c` and `f` to display a 1, our disp
 We don't get to see how the wrong wiring looks like though.
 All we can observe is a sequence of patterns and our task is to make sense of it.
 That is, to find out which digit each pattern represents:
+
 {{<figure src="gfx/display_broken.svg" title="Random digits on a malfunctioning display" width="450px">}}
 
 Once we've figured out how to map the observable patterns to the digits they were originally intended to represent, we can use this knowledge to read the number shown on a four-digit seven-segment display that uses the very same wiring:
+
 {{<figure src="gfx/display_4digit.svg" title="How 5353 shows up on the malfunctioning display" width="450px">}}
 
 The decoded number 5353 is the solution to this problem instance.
@@ -74,38 +78,50 @@ In first-order logic sets are characterised by predicates.
 For example, if the domain of discourse is $\mathbb{Z}$, predicate $\mathit{neg}(x) := x<0$ chracterises the set of negative integers.
 Accordingly, to characterise the segments of each digit $d$, we could define 10 predicates $\mathit{segment}_d(s)$.
 However, it is probably more convenient to let *one* binary predicate
-$$\mathit{digitSegment}:\underset{\overbrace{\\{0,1,2,3,4,5,6,7,8,9\\}}}{\mathit{Digit}}\times \underset{\overbrace{\\{a,b,c,d,e,f,g\\}}}{\mathit{Segment}}$$
+{{<math>}}
+\mathit{digitSegment}:\underset{\overbrace{\\{0,1,2,3,4,5,6,7,8,9\\}}}{\mathit{Digit}}\times \underset{\overbrace{\\{a,b,c,d,e,f,g\\}}}{\mathit{Segment}}
+{{</math>}}
 characterise the digit's segments.
 That is, require the following to hold
-$$\tag{1}\mathit{digitSegment}(d,s) \iff s \text{ is a segment of } d$$
+{{<math>}}
+\tag{1}\mathit{digitSegment}(d,s) \iff s \text{ is a segment of } d
+{{</math>}}
 for all digits $d$ and segments $s$.
 
 We'd like to have a similar characterisation of the **mapping of digits to segments on the broken seven-segment display**, but that can't be stated directly as it depends on the (unknown) [permutation](https://en.wikipedia.org/wiki/Permutation) of segments, or wires, if you will.
 Therefore, to first model the permutation, we introduce an uninterpreted function
-$$\mathit{Perm}:\mathit{Segment}\to\mathit{Segment}$$
+{{<math>}}
+\mathit{Perm}:\mathit{Segment}\to\mathit{Segment}
+{{</math>}}
 but restrict the possible interpretations of $\mathit{Perm}$ to permutations only.
 This is achieved by requiring the function to be bijective:
-$$\tag{2}\forall s,s'\in\mathit{Segment}\ldotp s = s' \iff \mathit{Perm}(s) = \mathit{Perm}(s')$$
+{{<math>}}
+\tag{2}\forall s,s'\in\mathit{Segment}\ldotp s = s' \iff \mathit{Perm}(s) = \mathit{Perm}(s')
+{{</math>}}
+
 {{<note>}}
 In contrast to the predicate $\mathit{digitSegment}$, whose [extension](https://en.wikipedia.org/wiki/Extension_(predicate_logic)) is provided, $\mathit{Perm}$ is an *uninterpreted* symbol.
 We follow the convention of logic programming literature and capitalise uninterpreted symbols.
 {{</note>}}
 
 Based on that we can now characterise the permuted digit segments
-$$\mathit{PermDigitSegment}:\mathit{Digit}\times \mathit{Segment}$$
+{{<math>}}
+\mathit{PermDigitSegment}:\mathit{Digit}\times \mathit{Segment}
+{{</math>}}
 by specifying that $\mathit{Perm}(s)$ must be a permuted segment of $d$ iff $s$ is a segment of $d$ on the functioning display:
-$$\tag{3}\mathit{PermDigitSegment}(d,\mathit{Perm}(s)) \iff \mathit{digitSegment}(d,s)$$
+{{<math>}}
+\tag{3}\mathit{PermDigitSegment}(d,\mathit{Perm}(s)) \iff \mathit{digitSegment}(d,s)
+{{</math>}}
 
 {{<note id="stepwise-composition">}}
 Alternatively, it may help to think of the relation as follows.
 If $s$ is a segment of $d$ on the functioning display, and $\mathit{Perm}$ maps $s$ to some $s'$, then $s'$ must be a segment of $d$ on the malfunctioning display, i.e.
 {{<math>}}
 \begin{aligned}
-& \mathit{digitSegment}(d,s)\wedge \mathit{Perm}(s) = s'\\
-\rightarrow & \mathit{PermDigitSegment(d,s')}\\
+& \mathit{digitSegment}(d,s)\wedge \mathit{Perm}(s) = s'\\\
+\rightarrow & \mathit{PermDigitSegment(d,s')}
 \end{aligned}
 {{</math>}}
-
 for all $s,s'\in\mathit{Segment},d\in\mathit{Digit}$.
 {{</note>}}
 
@@ -114,10 +130,14 @@ Even the permutation $\mathit{Perm}$, which differs from instance to instance, c
 
 What distinguishes an instance are the ten **patterns that can be observed on the (malfunctioning) display**, i.e. the first part of each line of the input file.
 Just as $\mathit{digitSegment}$ characterises the segments behind each possible digit, the idea here is to introduce a predicate
-$$\mathit{patternSegment}: \underset{\overbrace{\\{0,1,2,3,4,5,6,7,8,9\\}}}{\mathit{Index}} \times \mathit{Segment}$$
+{{<math>}}
+\mathit{patternSegment}: \underset{\overbrace{\\{0,1,2,3,4,5,6,7,8,9\\}}}{\mathit{Index}} \times \mathit{Segment}
+{{</math>}}
 to characterise the segments behind each of the ten observable patterns.
 That is, assert for all indices $i$ and segments $s$ that
-$$\tag{4}\mathit{patternSegment}(i,s) \iff s \text{ is a segment of the $i$-th pattern}.$$
+{{<math>}}
+\tag{4}\mathit{patternSegment}(i,s) \iff s \text{ is a segment of the $i$-th pattern}.
+{{</math>}}
 
 {{<note>}}
 Even though the domains $\mathit{Digit}$ and $\mathit{Index}$ seem to be equal they model different things.
@@ -129,7 +149,6 @@ Had our mental model of a problem instance been different, e.g. if the sequence 
 {{<math>}}
 \mathit{patternSegment}: \mathit{Digit} \times \mathit{Segment}
 {{</math>}}
-
 here, too.
 {{</note>}}
 
@@ -137,11 +156,15 @@ The only thing that remains to be formalised is the **relation between the obser
 That's the actual puzzle.
 What we know from the puzzle description is that each of the observable patterns matches the permuted segments of some digit.
 Therefore, there must be a "decoding function"
-$$\mathit{Idx2dig}: \mathit{Index} \to \mathit{Digit}$$
+{{<math>}}
+\mathit{Idx2dig}: \mathit{Index} \to \mathit{Digit}
+{{</math>}}
 which maps each observed pattern -- more precisely its index $i$ -- in such a way to a digit $d$ that the permuted segments of $d$ correspond to the observed pattern.
 Similar to $(3)$, we can constrain $\mathit{Idx2dig}$ to behave like this
 by specifying that $s$ must be a permuted segment of digit $\mathit{Idx2dig}(i)$ iff $s$ is a segment of the $i$-th observed pattern
-$$\tag{5}\mathit{PermDigitSegment}(\mathit{Idx2dig}(i),s) \iff \mathit{patternSegment}(i,s)$$
+{{<math>}}
+\tag{5}\mathit{PermDigitSegment}(\mathit{Idx2dig}(i),s) \iff \mathit{patternSegment}(i,s)
+{{</math>}}
 for all indices $i$ and segments $s$.
 
 ### The Characterisation at a Glance
@@ -168,6 +191,7 @@ More precisely, with its [Python bindings](https://z3prover.github.io/api/html/n
 To express the above predicates we first have to introduce the domains, or `Sort`s, our values will be from.
 Finite domains of unrelated values can be created via `EnumSort`, and that's exactly the kind of values we're dealing with in the puzzle.
 Since we will also need to convert between these values and their Python counterparts -- `int` for digits and indices, and `str` for segments -- we accompany each domain with corresponding mappings: 
+
 {{<highlight-file "aoc08.py" Python 17 30>}}
 
 {{<note>}}
@@ -203,9 +227,11 @@ The latter is [more incremental](https://github.com/Z3Prover/z3/issues/1152#issu
 The following encoding-agnostic procedure implements the suggested approach.
 It uses the scope management operations [`push` and `pop`](https://theory.stanford.edu/~nikolaj/programmingz3.html#sec-scopes) to replace the definition of $\mathit{patternSegment}$ between satisfiability checks.
 When a satisfying interpretation -- a so called model -- is found, we can inspect it to learn how the observed patterns map to digits:
+
 {{<highlight-file "aoc08.py" Python 53 72>}}
 
 The procedure is encoding-agnostic, in the sense that it only expects the characterisation code to implement the following self-explanatory interface:
+
 {{<highlight-file "aoc08.py" Python 33 50>}}
 
 {{<note>}}
@@ -225,6 +251,7 @@ It is handy to keep the symbols that we use in our encoding around, e.g. to refe
 Therefore, we declare these symbols as members of the encoder.
 What may catch you by surprise is that, following the [SMT-LIB standard](http://smtlib.cs.uiowa.edu/language.shtml), there is no special way to create a predicate in Z3.
 Instead, predicates are understood as functions with a Boolean result:
+
 {{<highlight-file "aoc08.py" Python 75 86>}}
 
 {{<note>}}
@@ -239,6 +266,7 @@ However, instead of guesswork, I find it the easiest to just look up the [string
 With the Python bindings, the expressions that represent our core constraints look very similar to the original ones.
 What stands out is that, in contrast to our formalisation, the variables we quantify over must be created beforehand.
 Furthermore, in code, the right-hand side of $(1)$ is a bit less readable than the <q>$s \text{ is a segment of }d$</q> (cf. lines 96-98):
+
 {{<highlight-file "aoc08.py" Python 88 117>}}
 
 {{<note>}}
@@ -247,11 +275,13 @@ A pitfall of the Python bindings is that, unlike `==`, the Boolean operators `an
 {{</note>}}
 
 Since the constraints $(1)$ and $(4)$ have the same form, `encode_variant` looks a lot like lines 91--98 from `encode_core`:
+
 {{<highlight-file "aoc08.py" Python 119 131>}}
 
 When our constraints are determined to be satisfiable, the returned model contains -- among other things -- the information how $\mathit{Idx2dig}$ maps indices to digits.
 Since only the encoder needs to know how exactly the encoding works, i.e. `solve_puzzle` shouldn't have to deal with the declared symbols, `interpret` looks up in the model what each input is mapped to and returns the findings as a plain list of integers.
 The integer at index $i$ denotes the digit encoded by the $i$-th observed pattern:
+
 {{<highlight-file "aoc08.py" Python 133 134>}}
 
 At this point you can give [our puzzle solver](aoc08.py) a try.
@@ -264,16 +294,19 @@ Although quantifiers facilitate concise characterisation they are also a source 
 Therefore, in the next step, we will bring our constraints into a quantifier-free fragment of first-order logic.
 
 Dropping the quantifiers does not entail any changes to the declared symbols, but the new encoder should communicate that the constraints it produces are free of quantifiers:
+
 {{<highlight-file "aoc08.py" Python 137 148>}}
 
 The approach to get rid of a forall quantifier is simple: just **explicitly enumerate the values and assert the nested constraint for each**.
 This leaves us with an increased number of constraints but spares Z3 the necessity of dealing with quantifiers:
+
 {{<highlight-file "aoc08.py" Python 150 172>}}
 
 Aside from the substitution of quantification by iteration, the code is effectively the same as in our [first encoder](#high-level-encoding).
 I find this version to be even more readable that the previous one, mostly because it is so easy to express <q>$s \text{ is a segment of }d$</q> for a concrete pair $(d,s)$.
 
 The rest of the encoder does not provide any new insights and is only shown for the sake of completeness:
+
 {{<highlight-file "aoc08.py" Python 174 185>}}
 
 Now, try running `solve_puzzle` with this new encoder.
@@ -295,8 +328,11 @@ Since all of our functions have finite domains, it is possible to introduce symb
 That is, for each function and input, we introduce a variable to denote the result.
 This of course impacts the symbols we declare. 
 For example, where we previously used an uninterpreted function
-$$\mathit{digitSegment}:\mathit{Digit}\times\mathit{Segment}\to\mathbb{B}$$
+{{<math>}}
+\mathit{digitSegment}:\mathit{Digit}\times\mathit{Segment}\to\mathbb{B}
+{{</math>}}
 to represent the predicate $\mathit{digitSegment}:\mathit{Digit}\times\mathit{Segment}$, we now have a Boolean variable for each pair $(d,s)\in\mathit{Digit}\times\mathit{Segment}$:
+
 {{<highlight-file "aoc08.py" Python 188 199>}}
 
 {{<note>}}
@@ -309,9 +345,11 @@ This does complicate constraints where we previously had nested function applica
 Here, the idea is similar to the [alternative formulation](#stepwise-composition) of $(3)$: we constrain the result of the outer function application depending on the result of the nested function application.
 However, without uninterpreted functions, some constraint simplification opportunities may become more obvious, too.
 Since the domain and value range of $\mathit{perm}$ are equal the bijectivity constraint can be simplified to "distinct applications of $\mathit{perm}$ return distinct segments":
+
 {{<highlight-file "aoc08.py" Python 201 224>}}
 
 As with the previous encodings, the rest of the code holds no surprises and is merely listed for the sake of completeness:
+
 {{<highlight-file "aoc08.py" Python 226 237>}}
 
 This is where we stop tweaking the encoding.

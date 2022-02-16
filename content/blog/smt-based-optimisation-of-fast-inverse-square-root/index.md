@@ -20,18 +20,18 @@ With this in mind, it is not surprising that the "fast inverse square root" is o
 While Quake did not invent the approximation, the publishing of its source code brought many developers into contact with this technique.
 And although modern CPUs provide native support for approximating $1/\sqrt{x}$ quickly -- rendering the approximation mostly irrelevant nowadays -- the general approach taken in this post is still applicable to many modern day questions.
 
-{{< note >}}
+{{<note>}}
 With the introduction of [SSE](https://en.wikipedia.org/wiki/Streaming_SIMD_Extensions), every x86_64 CPU since the Pentium III features a native instruction for computing $\sqrt{x}$ and its reciprocal via `SQRTSS` and `RSQRTSS`, respectively.
 
 More recent extensions, such as [AVX-512](https://en.wikipedia.org/wiki/AVX-512), provide even better approximations w.r.t. the relative error, and also support 64-bit floats.
-{{< /note >}}
+{{</note>}}
 
 ### The Fast Inverse Square Root
 The following C code is a condensed version of the [approximation used in Quake](https://github.com/id-Software/Quake-III-Arena/blob/master/code/game/q_math.c#L552).
 It boils down to treating the float as a 32-bit integer, and performing the trickery shown in line 3.
 The result could be returned after line 4, but adding a subsequent iteration of [Newton's method](https://en.wikipedia.org/wiki/Newton%27s_method) improves the precision significantly, while being computationally cheap.
 
-{{< highlight c "linenos=table" >}}
+{{<highlight c "linenos=table">}}
 float Q_rsqrt(float f) {
 	int32_t b = *(int32_t*)&f;
 	b = 0x5f3759df - (b >> 1); // The actual bit-level hack
@@ -41,7 +41,7 @@ float Q_rsqrt(float f) {
 	float fHalf = f * 0.5f;
 	return res * (1.5f - (fHalf * res * res));
 }
-{{< /highlight >}}
+{{</highlight>}}
 
 When presented with such a bit-level hack, one cannot help but wonder whether it really does what it is supposed to do in all cases.
 As you will see, we do not have to understand the approximation's inner workings to assess its correctness, but merely be able to formalise it.
@@ -55,29 +55,31 @@ However, a clear disadvantage of sticking with the absolute error is that it ign
 For example consider finding that some approximation yields $\epsilon(42) = 1000$.
 Without knowing the magnitude this may sound like a big error, but might actually be off by just 1% if $f(42) = 100000$.
 For this reason, it is often advantageous to use the [relative error](https://en.wikipedia.org/wiki/Approximation_error)
-$$\eta(x) = \frac{\epsilon(x)}{|f(x)|} = \left|1-\frac{\hat{f}(x)}{f(x)}\right|,$$
+{{<math>}}
+\eta(x) = \frac{\epsilon(x)}{|f(x)|} = \left|1-\frac{\hat{f}(x)}{f(x)}\right|,
+{{</math>}}
 which takes the magnitude into consideration.
 In the context of Quake, the quality of the approximation should not fluctuate but keep the relative error reasonably small for all inputs.
 Therefore it is [common](https://web.archive.org/web/20160308091758/http://www.daxia.com/bibis/upload/406Fast_Inverse_Square_Root.pdf) to analyse the fast inverse square root  w.r.t. the **maximum relative error** it may cause.
 The smaller this value is, the better the approximation is considered to be.
 
-{{< note >}}
+{{<note>}}
 Depending on the context, it might be more reasonable to use the [least squares](https://en.wikipedia.org/wiki/Least_squares) criterion -- a standard tool in regression analysis.
 
 [J. Kadlec](http://rrrola.wz.cz/inv_sqrt.html) has experimented with both measures in the context of `Q_rsqrt`, and provides accordingly optimised alternatives to `0x5f3759df`.
-{{< /note >}}
+{{</note>}}
 
 Accordingly, correctness of an approximation can be specified as the requirement that $\eta(x)$ stays below a "sufficiently" small value for all inputs $x$.
 Of course, the definition of when an error is negligible is governed by the context the approximation is used in.
 For this post, let `Q_rsqrt` be correct if it achieves a maximum relative error of less than 1%:
 
-{{< math >}}
+{{<math>}}
 \tag{1}\begin{aligned}
 \eta(x) &= \left|1-\frac{\mathit{Q\_rsqrt}(x)}{\frac{1}{\sqrt{x}}}\right|\\
 &= |1-\mathit{Q\_rsqrt}(x)\cdot\sqrt{x}| \\
-&< 0.01
+& &lt; 0.01
 \end{aligned}
-{{< /math >}}
+{{</math>}}
 
 ## Logical Characterisation of Program Semantics
 Instead of investigating the property of interest through testing, or exhaustive exploration of possible in- and outputs, symbolic verification is based on characterising semantics in terms of constraints in [first-order logic](https://en.wikipedia.org/wiki/First-order_logic), and reasoning about their satisfiability.
@@ -96,12 +98,11 @@ The characterisation is standard so feel free to skip it if you're just interest
 ### Characterising the Relative Error
 To start with a simple function, consider the following implementation of $\eta$ taken from our reference implementation.
 Just as in $(1)$, it computes $\eta(x)$ from $\sqrt x$ and $\mathit{Q\\_rsqrt}(x)$.
-{{< highlight-file "maxRelErr.c" c 29 31 >}}
+
+{{<highlight-file "maxRelErr.c" c 29 31>}}
 
 This already looks pretty much like a constraint that relates inputs and outputs, but what is wrong with something along the lines of
-
-$$\tag{2} \mathit{relErr} = |1 - \mathit{fFast}\cdot\mathit{fSqrt}|,$$
-
+{{<math>}}\tag{2} \mathit{relErr} = |1 - \mathit{fFast}\cdot\mathit{fSqrt}|,{{</math>}}
 where $\mathit{relErr},\mathit{fFast},\mathit{fSqrt}\in\mathbb{F}_{32}$ (32-bit floats)?
 
 While the general idea is sensible, going directly from source to characterisation bypasses the compiler.
@@ -113,25 +114,25 @@ Such decoupling of progamming languages and IRs, that all reasoning is actually 
 [LLVM IR](https://llvm.org/docs/LangRef.html) is probably the most prominent one, and the one we will use here.
 [Clang](https://clang.llvm.org/) can be used to compile our example to LLVM IR:
 
-{{< highlight-file "maxRelErr.ll" llvm 28 33 >}}
+{{<highlight-file "maxRelErr.ll" llvm 28 33>}}
 
 Given this representation, all potential subtleties become explicit.
 The function expects two 32-bit floats, denoted by %0 and %1, and returns a 32-bit floating-point number, too.
 There is no branching of control flow, making the characterisation pretty straight forward:
 
-{{< highlight-file "invsqrt.smt2" Scheme 27 38 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 27 38>}}
 
 While this post is not a tutorial on the [SMT-LIB language](http://smtlib.cs.uiowa.edu/papers/smt-lib-reference-v2.6-r2017-07-18.pdf), it should still be pretty easy to get the general idea and intuition.
 For the most part, the characterisation boils down to expressing the LLVM IR in terms of [symbolic expressions](https://en.wikipedia.org/wiki/S-expression) written in [prefix notation](https://en.wikipedia.org/wiki/Polish_notation).
 
-{{< note >}}
+{{<note>}}
 For an interactive introduction to the SMT-LIB language I recommend the [Z3 tutorial](https://rise4fun.com/Z3/tutorial/guide).
 [Z3](https://github.com/Z3Prover/z3/) is a feature-packed, MIT licensed and SMT-LIB compliant SMT solver.
 Besides supporting the SMT-LIB language it also features non-standard extensions, such as the `eval` command, which improve various aspects of working with SMT-LIB.
 
 For example prior to SMT-LIB v2.6, `(declare-const f Float32)` was Z3's syntactic sugar for `(declare-fun x () Float32)`.
 This handy command stresses the fact that 0-ary functions are just constants, and has made it into the standard.
-{{< /note >}}
+{{</note>}}
 
 `relErr` is the logical characterisation of the eponymous function, using the same names for intermediate values as the LLVM IR.
 As in the IR, the symbols `%0` to `%5` only exist within the scope of the function, and the returned value `%5` is just an alias for `(fp.abs %4)`.
@@ -144,11 +145,11 @@ This is also the reason why the verbosity in the auxiliary (0-ary) function `f1.
 Similar to the relative error function, `Q_rsqrt` features no branching of control flow but is merely a sequence of instructions.
 To be able to experiment with different constants in the hack later, we introduce an identifier `magic` that exists outside of the function.
 
-{{< highlight-file "maxRelErr.c" c 17 27 >}}
+{{<highlight-file "maxRelErr.c" c 17 27>}}
 
 Compiling this to LLVM IR yields the following for both 32 and 64-bit targets:
 
-{{< highlight-file "maxRelErr.ll" llvm 14 25 >}}
+{{<highlight-file "maxRelErr.ll" llvm 14 25>}}
 
 This example illustrates another advantage of characterising an IR over directly translating the source code.
 In contrast to many operations on real numbers, floating-point operations are [not associative](https://en.wikipedia.org/wiki/Floating-point_arithmetic#Accuracy_problems), but the IR makes the order, in which subexpressions will be evaluated on the target architecture, explicit.
@@ -156,14 +157,14 @@ In contrast to many operations on real numbers, floating-point operations are [n
 As with `relErr`, the characterisation of `Q_rsqrt` is essentialy a reformulation of the returned value `%10` in terms of the operations specified in SMT-LIB.
 As before, we introduce auxiliary functions `f0.5` and `f1.5` to keep the notation of these float constants short and readable.
 
-{{< highlight-file "invsqrt.smt2" Scheme 1 25 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 1 25>}}
 
 Two points may need further clarification though:
 
-{{< note >}}
+{{<note>}}
 Just like LLVM IR, SMT-LIB does not distinguish between signed and unsigned bit vectors.
 Instead, operations whose semantics depends on the signedness come in two flavours, e.g. both `bvugt` and `bvsgt` express "greater than".
-{{< /note >}}
+{{</note>}}
 
 1. The `magic` constant is declared as a 32-bit integer that exists in global scope.
 Unlike in the source code, its value is currently unconstrained but will be restricted later, depending on the property of interest.
@@ -188,7 +189,7 @@ maxRelErr: 0x3AE5B000 (0.0017523765563964844)
 To this end, we assert that `magic` should be the original constant `0x5F3759DF`, and that `b` is the bit vector representation of the float `f`.
 The naïve reference implementation finds the **input `0x016EB3C0`** (interpreted as float) to cause a relative error of `0x3AE5B000`, so we experiment with `b` taking this value:
 
-{{< highlight-file "invsqrt.smt2" Scheme 43 50 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 43 50>}}
 
 Feeding these constraints into an SMT solver, such as [Z3](https://github.com/Z3Prover/z3/), will return that they are indeed satisfiable.
 To determine whether the characterised functions actually compute the expected values, we could also have added the following assertions (prior to `check-sat`):
@@ -230,7 +231,7 @@ Instead of adding these unnecessary assertions, and making it harder for the sol
 Using this variant in [our characterisation](invsqrt.smt2), instead of the additional assertions, a solution is found immediately.
 The computed **values do indeed match those of the executable**:
 
-{{< highlight-file "invsqrt.log" zsh 1 17 >}}
+{{<highlight-file "invsqrt.log" zsh 1 17>}}
 
 ### Checking Correctness
 Having confirmed that there is nothing obviously wrong with our characterisation, we can now investigate the properties we are actually interested in.
@@ -238,25 +239,25 @@ Having confirmed that there is nothing obviously wrong with our characterisation
 We already established in the introduction that correctness of an approximation can be specified by constraining the maximum relative error.
 To prove that the relative error never exceeds 1% for any float, we leave the input to `Q_rsqrt` **unconstrained**, and check whether it is possible for `relErr` to return anything greater than 0.01.
 
-{{< highlight-file "invsqrt.smt2" Scheme 85 96 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 85 96>}}
 
 Here the solver returns `sat`, finding that picking infinity (`#x7f800000`) as input results in a greater relative error.
 Indeed, the hack turns out to not be applicable to all floating point numbers.
 
 To find out whether it will work "correctly" for the remaining inputs, we can additionally require the input to be **not infinite**:
 
-{{< highlight-file "invsqrt.smt2" Scheme 105 106 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 105 106>}}
 
 However, the solver returns `sat` again, finding that picking zero (`0x00000000`) as input results in a greater relative error, too.
 Granted, this is a rather special input, so what about restricting the input to be **not zero** either?
 
-{{< highlight-file "invsqrt.smt2" Scheme 115 116 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 115 116>}}
 
 Again, the solver finds the constraints to be satisfiable.
 It turns out that picking a [subnormal](https://en.wikipedia.org/wiki/Denormal_number) input (`#x00000001`) can result in a relative error above 1%, too.
 When also requiring the input to **not be subnormal**, the SMT solver finally determines the resulting set of constraints to be unsatisfiable:
 
-{{< highlight-file "invsqrt.smt2" Scheme 125 126 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 125 126>}}
 
 Since normal floats are not zero, infinite, or subnormal, the unsatisfiability of the accumulated set of constraints **proves that for all normal floats**, the predicate `relErr(..) > 0.01` is not satisfiable.
 
@@ -269,17 +270,17 @@ Since `NaN` is neither greater nor less than 1%, even an implementation of `Q_rs
 The authors of Quake were aware of the issue, and had an [according check](https://github.com/id-Software/Quake-III-Arena/blob/dbe4ddb10315479fc00086f08e25d968b4b43c49/code/game/q_math.c#L568) in place.
 To determine whether `NaN` can ever be returned by `relErr` for a normal float, we simplify the previously accumulated constraints to just `(fp.isNormal f)` and assert `fp.isNaN` for the result of `relErr`:
 
-{{< highlight-file "invsqrt.smt2" Scheme 134 145 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 134 145>}}
 
 The result is sobering.
 The constraints are trivially satisfiable by any normal, negative floating-point number.
 After all, we are not approximating an arbitrary function $f(x)$ but $1/\sqrt x$, and the square root for negative numbers is not defined -- at least not for floats.
 This should really have been part of our correctness criterion from the start.
 
-{{< note >}}
+{{<note>}}
 Knowing that $\sqrt x$ is not defined for negative $x$, we restrict the analysis to non-negative floats, such that `relErr` never returns `NaN`.
 However, even if $f(x)$ were an arbitrary function, we could have achieved the same by simply asserting `relErr` to not be `NaN`.
-{{< /note >}}
+{{</note>}}
 
 With the assertion `(not (fp.isNegative f))` added, `relErr` cannot return `NaN` anymore, and the previous proof that `relErr(..) > 0.01` is never satisfied becomes a proper proof of correctness.
 The following constraints are not satisfiable, proving **within seconds** that for all normal, non-negative floats **the relative error never exceeds 1%**.
@@ -309,14 +310,14 @@ With the current set of constraints, SMT solving can take the role of an [oracle
 While the solver returns `sat`, the maximum relative error is greater than the currently assumed bound, and a greater bound must be picked.
 However, if the solver returns `unsat`, the bound can be decreased.
 
-{{< note >}}
+{{<note>}}
 Z3 is not just an SMT solver but can also solve [optimisation problems over SMT formulas](https://rise4fun.com/Z3/tutorial/optimization).
 Unfortunately this machinery does not support floating-point constraints, which is why we do the minimisation manually.
-{{< /note >}}
+{{</note>}}
 
 A possible refinement sequence is evaluated in [`invsqrt.smt2`](invsqrt.smt2), outputting the following:
 
-{{< highlight-file "invsqrt.log" zsh 56 91 >}}
+{{<highlight-file "invsqrt.log" zsh 56 91>}}
 
 Unlike the previous constraints, these checks take a while (**hours**), but eventually **prove the maximum relative error to be `0x3AE5B000`** (~0.00175237).
 This matches the results of our [brute force search](maxRelErr.c).
@@ -330,17 +331,17 @@ When approaching this without any insight into the problem, finding the best con
 The evaluation of each constant, in turn, requires checking the relative error resulting from each of the $2^{32}$ possible input floats.
 Overall, exhaustive testing would involve $2^{32}\cdot 2^{32}$ computations of the relative error and is clearly not feasible.
 
-{{< note >}}
+{{<note>}}
 An exhaustive exploration of the maximum relative error resulting from each of the $2^{32}$ constants in question **can be made feasible** by exploiting peculiarities of $\eta(x)$.
 In particular, the computation of the maximum relative error for a given `magic` can be sped up, as it is sufficient to compute the error for $x\in[1,4)$ only -- the [error wraps around](http://rrrola.wz.cz/inv_sqrt.html).
-{{< /note >}}
+{{</note>}}
 
 To approach this with SMT, we first of all need a way of checking whether a `magic` constant exists that yields a maximum relative error below a given bound.
 The actual minimisation of the bound can then be achieved as above, by using the check as an oracle and refining the bound iteratively.
 More formally, we are primarily interested in solving
-
-$$ \underset{\mathit{magic}}{\exists} ~ \underset{x\geq 0}{\forall} ~ \mathit{normal}(x) \rightarrow \eta(x) < 0.001752,$$
-
+{{<math>}}
+\underset{\mathit{magic}}{\exists} ~ \underset{x\geq 0}{\forall} ~ \mathit{normal}(x) \rightarrow \eta(x) < 0.001752,
+{{</math>}}
 that is finding a `magic` constant which returns a smaller maximum relative error than the original constant `0x5F3759DF` does for normal, non-negative inputs.
 Such a search for parameters that make a system adhere to certain constraints is known as **parameter synthesis**.
 Although dedicated techniques for solving such problems exist, they are out of the scope of this post.
@@ -348,11 +349,11 @@ We, instead, follow the conceptually simpler approach of letting the SMT solver 
 
 Since all [free constants](https://en.wikipedia.org/wiki/Free_variables_and_bound_variables) that occur in an SMT instance are implicitly existentially quantified, the SMT-LIB characterisation of the upper constraint only involves an explicit `forall` quantifier:
 
-{{< highlight-file "invsqrt.smt2" Scheme 243 258 >}}
+{{<highlight-file "invsqrt.smt2" Scheme 243 258>}}
 
 Using these constraints, and the initial bound 0.001752, Z3 will output the following for the refinement sequence chosen in our [SMT-LIB script](invsqrt.smt2):
 
-{{< highlight-file "invsqrt.log" zsh 93 >}}
+{{<highlight-file "invsqrt.log" zsh 93>}}
 
 Solving these instances takes about **two days** on an i5-4210M, but Z3 (v4.8.5) eventually determines that the `magic` constant `0x5f375a81` achieves a maximum relative error of `0x3ae58c00` (~0.0017513).
 Furthermore, we find that **no constant can achieve an even lower maximum relative error**.
@@ -373,4 +374,4 @@ The following ideas come to mind (easiest first):
 * Tweak the characterisation to let the solver not only choose the `magic` constant but also a (bounded) number of instructions from a fixed set.
   Does the solver come up with the same instructions that were used in the original hack, or does an even better hack exist?
 
-{{< list-resources "{*.smt2,*.c,*.ll,*.log}" >}}
+{{<list-resources "{*.smt2,*.c,*.ll,*.log}">}}
