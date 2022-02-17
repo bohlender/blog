@@ -10,7 +10,7 @@
 				<h1>{{ .Title }}</h1>
 				{{ .Render "metadata" }}
 			</header>
-			{{ partial "headline-link" .Content}}
+			{{ .Content | safeHTML }}
 		</article>
 		</main>
 	</div>
