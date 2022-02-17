@@ -22,28 +22,28 @@
 			{{- with .Site.Social.github }}
 			<li>
 				<a href="{{ . }}">
-					<img class="icon" src="/gfx/fa-icons.svg#github" />
+					<img class="icon" src="/gfx/fa-icons.svg#github" alt="Open GitHub profile" />
 				</a>
 			</li>
 			{{- end }}
 			{{- with .Site.Social.facebook }}
 			<li>
 				<a href="{{ . }}">
-					<img class="icon" src="/gfx/fa-icons.svg#facebook" />
+					<img class="icon" src="/gfx/fa-icons.svg#facebook" alt="Open Facebook profile" />
 				</a>
 			</li>
 			{{- end }}
 			{{- with .Site.Social.lastfm }}
 			<li>
 				<a href="{{ . }}">
-					<img class="icon" src="/gfx/fa-icons.svg#lastfm" />
+					<img class="icon" src="/gfx/fa-icons.svg#lastfm" alt="Open last.fm profile" />
 				</a>
 			</li>
 			{{- end }}
 			{{- with .Site.Author.email }}
 			<li>
 				<a href="mailto:{{ . }}">
-					<img class="icon" src="/gfx/fa-icons.svg#mail" />
+					<img class="icon" src="/gfx/fa-icons.svg#mail" alt="Contact via e-mail" />
 				</a>
 			</li>
 			{{- end }}
@@ -51,7 +51,7 @@
 			{{- with .OutputFormats.Get "rss" -}}
 			<li>
 				<a href="{{ .Permalink }}">
-					<img class="icon" src="/gfx/fa-icons.svg#feed" />
+					<img class="icon" src="/gfx/fa-icons.svg#feed" alt="Open RSS feed" />
 				</a>
 			</li>
 			{{- end }}

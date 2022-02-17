@@ -340,11 +340,11 @@ A variable $\mathit{sm}\_{\mathit{src},\mathit{dst}}$ should be $\mathit{true}$,
   {{</math>}}
 * No smaller (higher priority) position has matched the symbol at $\mathit{dst}$:
   {{<math>}}
-  \bigwedge_{\substack{0\leq\mathit{prev}<\mathit{src}\\ \mathit{prev} \neq \mathit{dst}}} \neg \mathit{sm}_{\mathit{prev},\mathit{dst}}
+  \bigwedge_{\substack{0\leq\mathit{prev}&lt;\mathit{src}\\ \mathit{prev} \neq \mathit{dst}}} \neg \mathit{sm}_{\mathit{prev},\mathit{dst}}
   {{</math>}}
 * The symbol at index $\mathit{src}$ has not matched any symbol on a smaller (higher priority) position:
   {{<math>}}
-  \bigwedge_{\substack{0\leq\mathit{prev}<\mathit{dst}\\ \mathit{prev} \neq \mathit{src}}} \neg \mathit{sm}_{\mathit{src},\mathit{prev}}
+  \bigwedge_{\substack{0\leq\mathit{prev}&lt;\mathit{dst}\\ \mathit{prev} \neq \mathit{src}}} \neg \mathit{sm}_{\mathit{src},\mathit{prev}}
   {{</math>}}
 
 The rest of the `make_guess` method -- started in the previous section -- implements the proposed encoding:
