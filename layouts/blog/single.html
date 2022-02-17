@@ -2,8 +2,7 @@
 {{ partial "blog-banner" . }}
 <div class="notepad-wrapper">
 	<!-- The notebook cannot be <main> since notepad:last-of-type distinguishes <div> & <main> -->
-	<div class="notepad">
-		<main>
+	<main class="notepad">
 		<article>
 			<header>
 				<h1>{{ .Title }}</h1>
@@ -11,16 +10,15 @@
 			</header>
 			{{ .Content | safeHTML }}
 		</article>
-		</main>
-	</div>
+	</main>
 	{{ with .Site.RegularPages.Related . | first 3}}
-	<div class="notepad related-posts">
+	<section class="notepad related-posts">
 		<h1>Related Posts</h1>
 		<hr>
 		{{ range . }}
 			{{ .Render "summary" }}
 		{{ end }}
-	</div>
+	</section>
 	{{ end }}
 </div>
 {{ end }}

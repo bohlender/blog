@@ -796,11 +796,6 @@ header {
 	margin: $stdMargin 0 $stdMargin*2;
 	padding: 20px $stdMargin/2; // TODO: What for?
 
-	&:last-of-type { // Can slide under footer slightly
-		margin-bottom: -15px;
-		padding-bottom: 40px;
-	}
-	
 	border-left: 8px solid $colour2;
 	@media screen and(min-width: $notepadMaxWidth){
 		border-radius: 0 15px 15px 0;
@@ -858,7 +853,11 @@ header {
 		}
 	}
 }
-.related-posts { border-color:$colour4; }
+.related-posts {
+	border-color:$colour4;
+	margin-bottom: -15px; // Can slide under footer slightly
+	padding-bottom: 40px;
+}
 
 //=============================================================================
 // CV
