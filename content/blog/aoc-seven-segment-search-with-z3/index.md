@@ -22,7 +22,7 @@ It takes only few steps to get from a quantifier-laden high-level formulation to
 ## The Problem Statement
 A functioning [seven-segment display](https://en.wikipedia.org/wiki/Seven-segment_display) is supposed to represent digits as follows:
 
-{{<figure src="gfx/display_good.svg" title="Random digits on a functioning display" width="450px">}}
+{{<figure src="gfx/display_good.svg" title="Random digits on a functioning display" width="450">}}
 
 By associating each segment with a character, we can clearly describe which segments are supposed to light up for each digit:
 
@@ -34,11 +34,11 @@ We don't get to see how the wrong wiring looks like though.
 All we can observe is a sequence of patterns and our task is to make sense of it.
 That is, to find out which digit each pattern represents:
 
-{{<figure src="gfx/display_broken.svg" title="Random digits on a malfunctioning display" width="450px">}}
+{{<figure src="gfx/display_broken.svg" title="Random digits on a malfunctioning display" width="450">}}
 
 Once we've figured out how to map the observable patterns to the digits they were originally intended to represent, we can use this knowledge to read the number shown on a four-digit seven-segment display that uses the very same wiring:
 
-{{<figure src="gfx/display_4digit.svg" title="How 5353 shows up on the malfunctioning display" width="450px">}}
+{{<figure src="gfx/display_4digit.svg" title="How 5353 shows up on the malfunctioning display" width="450">}}
 
 The decoded number 5353 is the solution to this problem instance.
 However, [Advent of Code](https://adventofcode.com) is about programming, so -- to make people solve the puzzle programmatically -- there are actually 200 independent instances that need to be solved and their 4-digit numbers summed up.

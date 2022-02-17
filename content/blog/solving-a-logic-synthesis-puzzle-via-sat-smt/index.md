@@ -37,7 +37,7 @@ Gates with larger [fan-in](https://en.wikipedia.org/wiki/Fan-in) can be construc
 
 The following schematic illustrates one choice of connections (solid) from the many potential wirings (dashed) for an example with only one output $g_0$ and one gate $f_3$.
 
-{{<figure src="gfx/schematic_v1.svg" title="Generic 1-gate circuit" width="180px">}}
+{{<figure src="gfx/schematic_v1.svg" title="Generic 1-gate circuit" width="180">}}
 
 If $g_0$ were $x_0 \wedge x_1$, choosing the highlighted wiring and $f_3$ as AND would be a desirable logic synthesis result.
 Conceptually we want to guarantee something along these lines:
@@ -73,7 +73,7 @@ To denote that a gate $g_i$ is connected to $x_j$ we use a variable $g_{i,j}$.
 Similarly, we introduce variables $c_{i, j, k}$ to encode that $x_j$ is the first input of $f_i$, and $x_k$ the second one.
 With this in mind, reconsidering the wiring from our schematic, only $g_{0,3}$ and $c_{3,0,1}$ should be $\mathit{true}$.
 
-{{<figure src="gfx/schematic_v2.svg" title="Connection variables" width="240px">}}
+{{<figure src="gfx/schematic_v2.svg" title="Connection variables" width="240">}}
 
 For the simple case of $n=1$ inner gates, a circuit can be synthesised if (and only if) the following is satisfiable:
 {{<math>}}
@@ -200,7 +200,7 @@ Feel free to experiment with [the implementation](gen_smt2.py), feed the generat
 I've attached the full adder synthesis [SMT instance](full_adder.smt2) to this post, so you don't have run the generator.
 The solution I get from Z3 describes the following circuit:
 
-{{<figure src="gfx/full_adder.svg" title="Visualisation of synthesised full adder" width="350px">}}
+{{<figure src="gfx/full_adder.svg" title="Visualisation of synthesised full adder" width="350">}}
 
 Unfortunately, the quantifiers, uninterpreted functions and cardinality constraints render the instance that characterises the introductory puzzle too difficult to be solved within several days.
 Therefore, in the next section, we reduce the characterisation to [propositional logic](https://en.wikipedia.org/wiki/Propositional_calculus), trading off the complexity of our constraints against a larger instance, and end up with a standard approach for SAT-based logic synthesis.
@@ -388,7 +388,7 @@ We can enforce these connections by extending our [generic SAT-based characteris
 With these additional constraints, it took an old i5-4690 CPU [about 30min](puzzle.log) to solve the [corresponding SAT instance](puzzle.cnf) with **19 inner gates**.
 The synthesised circuit looks as follows:
 
-{{<figure src="gfx/puzzle.svg" title="Solution to puzzle" width="500px">}}
+{{<figure src="gfx/puzzle.svg" title="Solution to puzzle" width="500">}}
 
 Since we only allow gates with fan-in 2, here, the NOT2 denotes a NOT on the second input.
 

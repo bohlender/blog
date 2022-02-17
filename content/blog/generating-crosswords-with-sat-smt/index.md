@@ -46,7 +46,7 @@ We consider horizontal character sequences to be read from left to right, and ve
 Overall, the problem of crossword generation amounts to selecting the subset of words that allows for a placement which is compliant with the rules but also achieves some level of <q>quality</q>.
 While <q>quality</q> may be subjective, the following is an <q>optimal</q> placement for the quality metric I chose:
 
-{{<figure src="gfx/12x12_q104.svg" title="An optimal word placement" width="380px">}}
+{{<figure src="gfx/12x12_q104.svg" title="An optimal word placement" width="380">}}
 
 To really appreciate the result, try to come up with a subset and placement of words that looks better to you or at least contains a similar number of words.
 For reference, you can also give [existing tools](https://duckduckgo.com/?q=best+crossword+puzzle+generator) a try.
@@ -195,7 +195,7 @@ That is, understanding the placed words as vertices of an [undirected graph](htt
 
 The following figure illustrates the graph corresponding to our [introductory example](#an-optimal-word-placement):
 
-{{<figure src="gfx/12x12_q104_edgeRelationOfWords.svg" title="Understanding words as vertices" width="380px">}}
+{{<figure src="gfx/12x12_q104_edgeRelationOfWords.svg" title="Understanding words as vertices" width="380">}}
 
 For a fixed graph, computing the components can be [done in linear time](https://en.wikipedia.org/wiki/Connected_component_(graph_theory)#Algorithms), and the connectedness is also easy to see in the above figure.
 However, in our application, the graph is not fixed but parametrised by the solutions to the other constraints.
@@ -207,7 +207,7 @@ This is problematic since even our example crossword of size 12 already features
 
 Alternatively, by understanding the grid cells as vertices of a graph where the edges connect neighbouring (non-empty) cells, we can get around this problem:
 
-{{<figure src="gfx/12x12_q104_edgeRelationOfCells.svg" title="Understanding cells as vertices" width="380px">}}
+{{<figure src="gfx/12x12_q104_edgeRelationOfCells.svg" title="Understanding cells as vertices" width="380">}}
 
 Here, the edge relation grows linearly in the number of cells as every cell can at most be connected to four others.
 The size of our word set has no impact.
@@ -323,7 +323,7 @@ As to be expected, the higher the quality requirements are the longer it takes t
 It is easy to see that computing an optimal word placement may be unfeasible in practice: the time investment ramps up significantly as we approach unsatisfiable quality requirements.
 However, even the instances of quality 95 do already look pretty good and are solved by [plingeling](https://github.com/arminbiere/lingeling/tree/7d5db72420b95ab356c98ca7f7a4681ed2c59c70) within 336s on average:
 
-{{<figure src="gfx/12x12_q95.svg" title="A crossword of quality 95" width="380px">}}
+{{<figure src="gfx/12x12_q95.svg" title="A crossword of quality 95" width="380">}}
 
 Feel free to process [the measurements](eval_51words.csv) on your own if you're interested in specific figures.
 
