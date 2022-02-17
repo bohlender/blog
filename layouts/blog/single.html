@@ -11,12 +11,12 @@
 			{{ .Content | safeHTML }}
 		</article>
 	</main>
-	{{ with .Site.RegularPages.Related . | first 3}}
+	{{ with .Site.RegularPages.Related . | first 2}}
 	<section class="notepad related-posts">
-		<h1>Related Posts</h1>
+		<h2 style="margin-top: 0;">Related Posts</h2>
 		<hr>
 		{{ range . }}
-			{{ .Render "summary" }}
+			{{ .Render "summary_h3" }}
 		{{ end }}
 	</section>
 	{{ end }}

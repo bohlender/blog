@@ -1,0 +1,10 @@
+<article>
+    <header>
+        <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+        {{ .Render "metadata" }}
+    </header>
+    {{- .Summary }}
+	<a class="read-more" href="{{ .Permalink }}">
+        &raquo; Read more
+    </a>
+</article>

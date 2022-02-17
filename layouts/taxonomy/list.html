@@ -9,7 +9,7 @@
         <hr>
         {{ .Content }}
         {{ range .Paginator.Pages }}
-            {{ .Render "summary" }}
+            {{ .Render "summary_h2" }}
         {{ end }}
         {{ template "_internal/pagination.html" . }}
     </main>
