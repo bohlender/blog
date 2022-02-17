@@ -5,6 +5,5 @@ title = '''{{ .Title }}'''
 summary = '''{{ .Summary }}'''
 sourceLink = '''{{ .SourceLink }}'''
 sourceTitle = '''{{ .SourceTitle }}'''
-date = '''{{ .Date | date }}'''
-
+date = '''{{ .Date.Format "2006-01-02" }}'''
 {{- end }}
