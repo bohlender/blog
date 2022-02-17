@@ -230,8 +230,8 @@ for all coordinates $(x,y)$ within the grid bounds, to identify the row and exac
 Clearly, $\mathit{ccStart}_y$ must be $\mathit{true}$ for the first row that is not empty, i.e.
 {{<math>}}
 \begin{aligned}
-\mathit{ccStart}_y =&~ \bigvee_{0\leq x < \mathit{size}} \mathit{grid}_{x,y} \neq \mathit{empty}\\
-\wedge&~ \bigwedge_{0\leq i < y} \neg \mathit{ccStart}_i
+\mathit{ccStart}_y =&~ \bigvee_{0\leq x &lt; \mathit{size}} \mathit{grid}_{x,y} \neq \mathit{empty}\\
+\wedge&~ \bigwedge_{0\leq i &lt; y} \neg \mathit{ccStart}_i
 \end{aligned}
 {{</math>}}
 and $\mathit{ccStart}\_{x,y}$ must be $\mathit{true}$ for the first non-empty cell in that row, i.e.
@@ -239,7 +239,7 @@ and $\mathit{ccStart}\_{x,y}$ must be $\mathit{true}$ for the first non-empty ce
 \begin{aligned}
 \mathit{ccStart}_{x,y} =&~ \mathit{ccStart}_y\\
 \wedge&~ \mathit{grid}_{x,y} \neq \mathit{empty}\\
-\wedge&~ \bigwedge_{0\leq i < x} \neg \mathit{ccStart}_{i,y}
+\wedge&~ \bigwedge_{0\leq i &lt; x} \neg \mathit{ccStart}_{i,y}
 \end{aligned}
 {{</math>}}
 

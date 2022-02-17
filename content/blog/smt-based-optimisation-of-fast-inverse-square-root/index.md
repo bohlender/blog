@@ -340,7 +340,7 @@ To approach this with SMT, we first of all need a way of checking whether a `mag
 The actual minimisation of the bound can then be achieved as above, by using the check as an oracle and refining the bound iteratively.
 More formally, we are primarily interested in solving
 {{<math>}}
-\underset{\mathit{magic}}{\exists} ~ \underset{x\geq 0}{\forall} ~ \mathit{normal}(x) \rightarrow \eta(x) < 0.001752,
+\underset{\mathit{magic}}{\exists} ~ \underset{x\geq 0}{\forall} ~ \mathit{normal}(x) \rightarrow \eta(x) &lt; 0.001752,
 {{</math>}}
 that is finding a `magic` constant which returns a smaller maximum relative error than the original constant `0x5F3759DF` does for normal, non-negative inputs.
 Such a search for parameters that make a system adhere to certain constraints is known as **parameter synthesis**.
