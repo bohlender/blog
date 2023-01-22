@@ -1,55 +1,78 @@
-{{ $srcHigh := (.Get "src") }}
-{{ $srcLow := (.Get "src") }}
-{{ $needsLb := false }}
-{{ $res := .Page.Resources.GetMatch $srcHigh }}
-{{ if ne $res.MediaType.SubType "svg" }}
-{{ if (and $res (gt $res.Width 650) )}}
-    {{ $width := (.Get "width") | default 650 | int }}
-    {{ $resizeOption := printf "%dx" $width }}
-    {{ $srcLow = ($res.Resize $resizeOption).RelPermalink }}
-    {{ $needsLb = true }}
-{{ end }}
+<!-- Params:
+  src: path to image,
+  width: image width on page (independently lightbox will try to show it at full res),
+  title: ...
+  caption: string to show below image (optional)
+  alt: ...
+  link: ...
+  attr: ...
+  attrlink: ...
+  src-next: path to next image (optional),
+  src-prev: path to previous image (optional)
+  image-fill: param passed to $image.Fit (optional)"
+-->
+{{ $maxImageWidth := 650}}
+
+{{ $image := .Page.Resources.GetMatch (.Get "src") }}
+{{ $thumb := $image }}
+{{ $imageId := path.BaseName $image | anchorize }}
+
+<!-- need downscaling + lightbox if embedded in gallery or image too large -->
+{{ $needsLightbox := false }}
+{{ if ne $image.MediaType.SubType "svg" }}
+    {{ if (or (gt $image.Width $maxImageWidth) .Parent) }}
+        {{ $width := (.Get "width") | default $maxImageWidth | int }}
+        {{ with (.Get "image-fill") }}
+            {{ $thumb = ($image.Fill .).RelPermalink }}
+        {{ else }}
+            {{ $resizeOption := printf "%dx" $width }}
+            {{ $thumb = ($image.Resize $resizeOption).RelPermalink }}
+        {{ end }}
+        {{ $needsLightbox = true }}
+    {{ end }}
 {{ end }}
 <!-- 1) Some nesting is needed to align figcaption with img in all cases -->
 <!-- 2) The figure-nesting is needed (div doesn't work) to prevent their disappearing in ffox reader view -->
 <figure class="figure-outer" id="{{ .Get "title" | anchorize }}">
     <figure class="{{ .Get `class` | default `figure-inner` }}">
-        {{- if $needsLb -}}
-            <a class="perfundo__link" href="#perfundo-{{ $res.Name }}">
+        {{- if $needsLightbox -}}
+            <a class="perfundo__link" href="#{{ $imageId }}">
         {{- end }}
-        {{- if (and (.Get "link") (not $needsLb)) -}}
+        {{- if (and (.Get "link") (not $needsLightbox)) -}}
             <a href="{{ .Get "link" }}"{{ with .Get "target" }} target="{{ . }}"{{ end }}{{ with .Get "rel" }} rel="{{ . }}"{{ end }}>
         {{- end }}
-        <img src="{{ $srcLow }}"
+        <img src="{{ $thumb }}"
              {{- if or (.Get "alt") (.Get "caption") }}
              alt="{{ with .Get "alt" }}{{ . }}{{ else }}{{ .Get "caption" | markdownify| plainify }}{{ end }}"
              {{- end -}}
              {{- with .Get "width" }} width="{{ . }}"{{ end -}}
              {{- with .Get "height" }} height="{{ . }}"{{ end -}}
         /> <!-- Closing img tag -->
-        {{- if (or (.Get "link") $needsLb)}}</a>{{ end -}}
-        {{- if or (or (.Get "title") (.Get "caption")) (.Get "attr") }}
-            <figcaption>
-                {{ with (.Get "title") -}}
-                    {{ . }}
-                {{- end -}}
-                {{- if or (.Get "caption") (.Get "attr") -}}
-                <p>
-                    {{- .Get "caption" | markdownify -}}
-                    {{- with .Get "attrlink" }}
-                    <a href="{{ . }}">
+        {{- if (or (.Get "link") $needsLightbox)}}</a>{{ end -}}
+        {{ if not .Parent }}
+            {{- if or (or (.Get "title") (.Get "caption")) (.Get "attr") }}
+                <figcaption>
+                    {{ with (.Get "title") -}}
+                        {{ . }}
                     {{- end -}}
-                    {{- .Get "attr" | markdownify -}}
-                    {{- if .Get "attrlink" }}</a>{{ end }}
-                </p>
-                {{- end }}
-            </figcaption>
-        {{- end }}
+                    {{- if or (.Get "caption") (.Get "attr") -}}
+                    <p>
+                        {{- .Get "caption" | markdownify -}}
+                        {{- with .Get "attrlink" }}
+                        <a href="{{ . }}">
+                        {{- end -}}
+                        {{- .Get "attr" | markdownify -}}
+                        {{- if .Get "attrlink" }}</a>{{ end }}
+                    </p>
+                    {{- end }}
+                </figcaption>
+            {{- end }}
+        {{ end }}
     </figure>
-    {{ if $needsLb}}
-    <div id="perfundo-{{ $res.Name }}" class="perfundo__overlay">
+    {{ if $needsLightbox}}
+    <div id="{{ $imageId }}" class="perfundo__overlay">
         <figure class="perfundo__content perfundo__figure">
-            <div class="perfundo__image" style="height: {{ $res.Height }}px; width: {{ $res.Width }}px; background-image: url({{ $res.RelPermalink }});"></div>
+            <div class="perfundo__image" style="width: {{ $image.Width }}px; padding-top: 56.25%; background-image: url({{ $image.RelPermalink }});"></div>
             <figcaption>
                 {{ with (.Get "title") -}}
                     {{ . }}
@@ -67,6 +90,14 @@
             </figcaption>
         </figure>
         <a href="#perfundo-untarget" class="perfundo__close perfundo__control">Close</a>
+        {{ with (.Get "src-prev") }}
+          {{ $prevImageId := path.BaseName . | anchorize }}
+          <a class="perfundo__prev perfundo__control" href="#{{ $prevImageId }}">Prev</a>
+        {{ end }}
+        {{ with (.Get "src-next") }}
+          {{ $nextImageId := path.BaseName . | anchorize }}
+          <a class="perfundo__next perfundo__control" href="#{{ $nextImageId }}">Next</a>
+        {{ end }}
     </div>
     {{ end }}
 </figure>

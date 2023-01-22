@@ -1,4 +1,6 @@
 Must:
+- update to lastest version of hugo
+- clean up figure shortcode & use the gallery shortcode on the photography page
 - pre-deployment: check for deadlinks
 - https://validator.w3.org/
 - KaTeX font size seems off
