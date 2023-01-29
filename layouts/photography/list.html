@@ -4,7 +4,7 @@
     {{ $res := .Resources.ByType "image" }}
     {{ $res = sort $res "Name" "desc" }}
     {{- range $i, $image := $res }}
-        {{ $imageId := path.BaseName $image | anchorize }}
+        {{ $imageId := path.Base $image | anchorize }}
         {{- $thumb := $image.Resize "600x q70" }}
         {{- $aspect := div (float $thumb.Width) $thumb.Height }}
         <div class=" perfundo js-perfundo gallery-item
@@ -29,13 +29,13 @@
                 {{ if (lt $i (sub (len $res) 1)) }}
                     {{ $nextI := mod (add $i 1) (len $res) }}
                     {{ $nextImg := index $res $nextI }}
-                    {{ $nextImageId := path.BaseName $nextImg | anchorize }}
+                    {{ $nextImageId := path.Base $nextImg | anchorize }}
                     <a class="perfundo__next perfundo__control js-perfundo-next" href="#{{ $nextImageId }}">Next</a>
                 {{ end }}
                 {{ if (gt $i 0) }}
                     {{ $prevI := cond (lt (sub $i 1) 0) (sub (len $res) 1) (sub $i 1) }}
                     {{ $prevImg := index $res $prevI }}
-                    {{ $prevImageId := path.BaseName $prevImg | anchorize }}
+                    {{ $prevImageId := path.Base $prevImg | anchorize }}
                     <a class="perfundo__prev perfundo__control js-perfundo-prev" href="#{{ $prevImageId }}">Prev</a>
                 {{ end }}
             </div>

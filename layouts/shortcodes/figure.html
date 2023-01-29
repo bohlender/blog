@@ -15,7 +15,7 @@
 
 {{ $image := .Page.Resources.GetMatch (.Get "src") }}
 {{ $thumb := $image }}
-{{ $imageId := path.BaseName $image | anchorize }}
+{{ $imageId := path.Base $image | anchorize }}
 
 <!-- need downscaling + lightbox if embedded in gallery or image too large -->
 {{ $needsLightbox := false }}
@@ -91,11 +91,11 @@
         </figure>
         <a href="#perfundo-untarget" class="perfundo__close perfundo__control js-perfundo-close">Close</a>
         {{ with (.Get "src-prev") }}
-          {{ $prevImageId := path.BaseName . | anchorize }}
+          {{ $prevImageId := path.Base . | anchorize }}
           <a class="perfundo__prev perfundo__control js-perfundo-prev" href="#{{ $prevImageId }}">Prev</a>
         {{ end }}
         {{ with (.Get "src-next") }}
-          {{ $nextImageId := path.BaseName . | anchorize }}
+          {{ $nextImageId := path.Base . | anchorize }}
           <a class="perfundo__next perfundo__control js-perfundo-next" href="#{{ $nextImageId }}">Next</a>
         {{ end }}
     </div>
