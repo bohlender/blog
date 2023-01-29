@@ -33,10 +33,10 @@
 {{ end }}
 <!-- 1) Some nesting is needed to align figcaption with img in all cases -->
 <!-- 2) The figure-nesting is needed (div doesn't work) to prevent their disappearing in ffox reader view -->
-<figure class="figure-outer" id="{{ .Get "title" | anchorize }}">
+<figure class="perfundo js-perfundo figure-outer" id="{{ .Get "title" | anchorize }}">
     <figure class="{{ .Get `class` | default `figure-inner` }}">
         {{- if $needsLightbox -}}
-            <a class="perfundo__link" href="#{{ $imageId }}">
+            <a class="perfundo__link js-perfundo-link" href="#{{ $imageId }}">
         {{- end }}
         {{- if (and (.Get "link") (not $needsLightbox)) -}}
             <a href="{{ .Get "link" }}"{{ with .Get "target" }} target="{{ . }}"{{ end }}{{ with .Get "rel" }} rel="{{ . }}"{{ end }}>
@@ -70,7 +70,7 @@
         {{ end }}
     </figure>
     {{ if $needsLightbox}}
-    <div id="{{ $imageId }}" class="perfundo__overlay">
+    <div id="{{ $imageId }}" class="perfundo__overlay js-perfundo-overlay">
         <figure class="perfundo__content perfundo__figure">
             <div class="perfundo__image" style="width: {{ $image.Width }}px; padding-top: 56.25%; background-image: url({{ $image.RelPermalink }});"></div>
             <figcaption>
@@ -89,14 +89,14 @@
                 {{- end }}
             </figcaption>
         </figure>
-        <a href="#perfundo-untarget" class="perfundo__close perfundo__control">Close</a>
+        <a href="#perfundo-untarget" class="perfundo__close perfundo__control js-perfundo-close">Close</a>
         {{ with (.Get "src-prev") }}
           {{ $prevImageId := path.BaseName . | anchorize }}
-          <a class="perfundo__prev perfundo__control" href="#{{ $prevImageId }}">Prev</a>
+          <a class="perfundo__prev perfundo__control js-perfundo-prev" href="#{{ $prevImageId }}">Prev</a>
         {{ end }}
         {{ with (.Get "src-next") }}
           {{ $nextImageId := path.BaseName . | anchorize }}
-          <a class="perfundo__next perfundo__control" href="#{{ $nextImageId }}">Next</a>
+          <a class="perfundo__next perfundo__control js-perfundo-next" href="#{{ $nextImageId }}">Next</a>
         {{ end }}
     </div>
     {{ end }}

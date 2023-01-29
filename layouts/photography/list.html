@@ -4,34 +4,41 @@
     {{ $res := .Resources.ByType "image" }}
     {{ $res = sort $res "Name" "desc" }}
     {{- range $i, $image := $res }}
+        {{ $imageId := path.BaseName $image | anchorize }}
         {{- $thumb := $image.Resize "600x q70" }}
         {{- $aspect := div (float $thumb.Width) $thumb.Height }}
-        <figure class="gallery-item
-            {{ if gt $aspect 1.33 -}}
-            horizontal
-            {{- end }}
-            {{- if lt $aspect 0.75 }}
-            vertical
-            {{- end }}
-            ms-thumbnail">
-            <a class="perfundo__link" href="#perfundo-{{ $image.Name }}">
+        <div class=" perfundo js-perfundo gallery-item
+                {{ if gt $aspect 1.33 -}}
+                horizontal
+                {{- end }}
+                {{- if lt $aspect 0.75 }}
+                vertical
+                {{- end }}
+                ms-thumbnail">
+            <a class="perfundo__link js-perfundo-link" href="#{{ $imageId }}">
                 <img src="{{ $thumb.RelPermalink }}">
             </a>
-        </figure>
-        <div id="perfundo-{{ $image.Name }}" class="perfundo__overlay">
-            <figure class="perfundo__content perfundo__figure">
-                <!-- <a href="#perfundo-untarget"> -->
-                    <div class="perfundo__image" style="height: {{ $image.Height }}px; width: {{ $image.Width }}px; background-image: url({{ $image.RelPermalink }});"></div>
-                <!-- </a> -->
-            </figure>
-            <a href="#perfundo-untarget" class="perfundo__close perfundo__control">Close</a>
-            <!-- Looping iteration forwards/backwards -->
-            {{ $nextI := mod (add $i 1) (len $res) }}
-            {{ $prevI := cond (lt (sub $i 1) 0) (sub (len $res) 1) (sub $i 1) }}
-            {{ $nextImg := index $res $nextI }}
-            {{ $prevImg := index $res $prevI }}
-            <a class="perfundo__next perfundo__control" href="#perfundo-{{ $nextImg.Name }}">Next</a>
-            <a class="perfundo__prev perfundo__control" href="#perfundo-{{ $prevImg.Name }}">Prev</a>
+            <div id="{{ $imageId }}" class="perfundo__overlay js-perfundo-overlay">
+                <figure class="perfundo__content perfundo__figure">
+                    <!-- <a href="#perfundo-untarget"> -->
+                        <div class="perfundo__image" style="height: {{ $image.Height }}px; width: {{ $image.Width }}px; background-image: url({{ $image.RelPermalink }});"></div>
+                    <!-- </a> -->
+                </figure>
+                <a href="#perfundo-untarget" class="perfundo__close perfundo__control js-perfundo-close">Close</a>
+                <!-- Looping iteration forwards/backwards -->
+                {{ if (lt $i (sub (len $res) 1)) }}
+                    {{ $nextI := mod (add $i 1) (len $res) }}
+                    {{ $nextImg := index $res $nextI }}
+                    {{ $nextImageId := path.BaseName $nextImg | anchorize }}
+                    <a class="perfundo__next perfundo__control js-perfundo-next" href="#{{ $nextImageId }}">Next</a>
+                {{ end }}
+                {{ if (gt $i 0) }}
+                    {{ $prevI := cond (lt (sub $i 1) 0) (sub (len $res) 1) (sub $i 1) }}
+                    {{ $prevImg := index $res $prevI }}
+                    {{ $prevImageId := path.BaseName $prevImg | anchorize }}
+                    <a class="perfundo__prev perfundo__control js-perfundo-prev" href="#{{ $prevImageId }}">Prev</a>
+                {{ end }}
+            </div>
         </div>
     {{- end }}
     </main>
