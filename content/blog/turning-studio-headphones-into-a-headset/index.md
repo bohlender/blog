@@ -1,8 +1,9 @@
 ---
 title: "Turning Studio Headphones Into a Headset"
 date: 2023-01-21T13:38:05+01:00
+publishDate: 2023-01-29
 tags: ["Tinkering"]
-draft: true
+draft: false
 math: false
 images: []
 videos: []
