@@ -7,7 +7,7 @@ images: []
 ---
 
 # Disclaimer
-The information on this website is provided "as is", without warrany of any kind.
+The information on this website is provided "as is", without warranty of any kind.
 This is a personal website, so all expressed opinions are solely my own, and in particular not connected with my employer.
 In no event shall I, the author, be liable for any claim, damages or other liability arising from, out of or in connection with this website, or consumption of its content.
 By using this website, you hereby consent to its terms.
