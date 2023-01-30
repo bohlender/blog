@@ -18,7 +18,7 @@ Unless stated otherwise, all **content** of this website is © Dimitri Bohlender
 Essentially, you may copy and redistribute unmodified content freely, as long as you give appropriate credit and do not use the material for commercial purposes.
 
 ## Source
-Unlike the content, the **source code** is subject to the MIT license.
+Unlike the content, the **source code** driving this site, i.e. HTML templates, CSS etc., is subject to the MIT license.
 It is a permissive license with limited warranty and liability, only requiring preservation of copyright and license notices:
 
 > MIT License
