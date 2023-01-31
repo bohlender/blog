@@ -30,10 +30,10 @@ paginate = 5
   [params.blog]
     description = "Thoughts on formal methods, computer science, art & society"
   [[params.cvSections]]
-    name = "Education"
+    name = "Work Experience"
     weight = 1
   [[params.cvSections]]
-    name = "Work Experience"
+    name = "Education"
     weight = 2
   [[params.cvSections]]
     name = "Publications"
