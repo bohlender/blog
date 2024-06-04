@@ -306,6 +306,12 @@ Z3 provides [tactics](https://theory.stanford.edu/~nikolaj/programmingz3.html#se
 
 {{<highlight-file "crossword.py" Python 189 200>}}
 
+{{<note>}}
+A reader noticed that nowadays `exportCNF` fails to produce a CNF.
+I suspect that some of the tactics' semantics have changed in recent versions and the sequence does not guarantee the goal to be in CNF anymore.
+Sticking to what was the latest version at the time of writing, i.e. Z3 4.11.2.0, is guaranteed to work though.
+{{</note>}}
+
 ## Experiments
 Now that we got the crossword generation pipeline up an running it is interesting to see how long it takes to assemble [the words from our example](#the-problem-statement) into crosswords of size 12 with varying quality requirements.
 Following the proposed approach, I generated crosswords of increasing quality and measured the time needed to solve the SAT instances with various solvers.
