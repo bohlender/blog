@@ -174,8 +174,7 @@ Instead of just picking some consistent candidate, one can also analyse how prom
 The first and probably most popular way for picking a "good" candidate was suggested by [Knuth](https://www.cs.uni.edu/~wallingf/teaching/cs3530/resources/knuth-mastermind.pdf) in 1977.
 The general idea is that the best guess should minimise the set of consistent candidates -- no matter the feedback.
 By assuming the least helpful feedback to be returned for each guess, and picking the (not necessarily consistent) guess in this setting that will yield the smallest set of consistent candidates, Knuth effectively implements a "shallow" [Minimax](https://en.wikipedia.org/wiki/Minimax) rule.
-
-While a tree-like illustration is most helpful for Minimax on longer games, I found the table-oriented argument from [the overview](http://www.philos.rug.nl/~barteld/master.pdf) to be more apt for the shallow Minimax typically used in the case of Mastermind.
+While a tree-like illustration is most helpful for Minimax on longer games, here, I find the table-oriented argument from [the overview](http://www.philos.rug.nl/~barteld/master.pdf) to be more apt.
 
 Consider committing some candidate $c$ and, in turn, receiving some feedback $f$.
 The following table illustrates the possible outcomes depending on the chosen $c$ and the codemaker's feedback $f$ for the very *first guess*:
