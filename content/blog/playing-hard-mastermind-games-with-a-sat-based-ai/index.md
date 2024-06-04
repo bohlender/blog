@@ -110,7 +110,7 @@ However, they work well for most practical Mastermind variants and are a good pl
 In contrast to *symbolic* methods for search and reachability checking, which work with implicit representations of state sets, *explicit* methods actually construct each state (here: secret codes) separately and store each in an accessible form in memory.
 
 {{<note>}}
-I've found this [overview of Mastermind strategies](http://www.philos.rug.nl/~barteld/master.pdf) particularly helpful to get an understanding of the (explicit) standard approaches and their tradeoffs. 
+I've found this [overview of Mastermind strategies](https://web.archive.org/web/20181024143436/http://www.philos.rug.nl/~barteld/master.pdf) particularly helpful to get an understanding of the (explicit) standard approaches and their tradeoffs. 
 {{</note>}}
 
 In the following implementations, we represent secrets as tuples of integers.
@@ -149,7 +149,7 @@ Although the implementation always returns the first element, there is nothing w
 Unless a guess happens to match the secret exactly, we will receive feedback $f$ that renders some elements of `self.candidates` inconsistent with $f$.
 Therefore, after every round, such candidates and the last (wrong) guess are removed from `self.candidates`.
 
-Even though the approach does not result in optimal play, and many instances can be won in less turns, it is computationally cheap and solves a classic Mastermind instance in $5.765$ turns on average.
+Even though the approach does not result in optimal play, and many instances can be won in less turns, it is simple and solves a classic Mastermind instance in $5.765$ turns on average.
 This is surprisingly [close to the theoretical minimum](http://www.philos.rug.nl/~barteld/master.pdf) of $4.34$ turns.
 
 ### Lazy Enumeration of Consistent Candidates
@@ -166,15 +166,16 @@ Unlike the previous approach, which incrementally refines the set of candidates 
 {{<highlight-file "mastermind.py" Python 35 39>}}
 
 ### Minimax-based Guessing
-Since my original motivation for looking into the topic was to learn how to play the Mastermind games in [Mansions of Madness](https://en.wikipedia.org/wiki/Mansions_of_Madness) optimally, I feel like I should outline how to do this, too.
+Since my original motivation for looking into the topic was to learn how to play the Mastermind games in [Mansions of Madness](https://en.wikipedia.org/wiki/Mansions_of_Madness) optimally, I feel like I should outline how the typical approach to this, too.
 Even though the central topic of this post is the (symbolic) computation of consistent guesses for hard Mastermind instances.
 
 Instead of just picking some consistent candidate, one can also analyse how promising the various candidates are and pick the <q>best</q> one -- depending on some heuristic or notion of quality.
 
 The first and probably most popular way for picking a "good" candidate was suggested by [Knuth](https://www.cs.uni.edu/~wallingf/teaching/cs3530/resources/knuth-mastermind.pdf) in 1977.
 The general idea is that the best guess should minimise the set of consistent candidates -- no matter the feedback.
-By assuming the least helpful feedback to be returned for each guess, and picking the (not necessarily consistent) guess in this setting that will yield the smallest set of consistent candidates, Knuth effectively implements a shallow [Minimax](https://en.wikipedia.org/wiki/Minimax) rule.
-While a tree-like illustration is most helpful for Minimax on longer games, I found the table-oriented argument from [the overview](http://www.philos.rug.nl/~barteld/master.pdf) to be more apt in the case of Mastermind.
+By assuming the least helpful feedback to be returned for each guess, and picking the (not necessarily consistent) guess in this setting that will yield the smallest set of consistent candidates, Knuth effectively implements a "shallow" [Minimax](https://en.wikipedia.org/wiki/Minimax) rule.
+
+While a tree-like illustration is most helpful for Minimax on longer games, I found the table-oriented argument from [the overview](http://www.philos.rug.nl/~barteld/master.pdf) to be more apt for the shallow Minimax typically used in the case of Mastermind.
 
 Consider committing some candidate $c$ and, in turn, receiving some feedback $f$.
 The following table illustrates the possible outcomes depending on the chosen $c$ and the codemaker's feedback $f$ for the very *first guess*:
@@ -219,6 +220,12 @@ That's why we also keep the inconsistent candidates (`self.not_candidate`) aroun
 The Minimax-based approach solves any classic Mastermind instance **within five guesses**, and needs $4.476$ rounds on average.
 Unfortunately, the runtime complexity of this and similar methods that optimise rigorously is quadratic in the number of candidates.
 Considering that even iterating over all possible secrets of a hard Mastermind instance takes too long for a game AI, aiming for optimal guesses is quite a stretch.
+
+{{<note>}}
+In fact, by implementing a Minimax rule of limited depth, this approach does actually _not_ play optimally -- the guesses are merely locally optimal.
+Nevertheless, it's not much worse than the performance of optimal play.
+With exhaustive exploration of the game tree, classic Mastermind instances can be solved within $4.34$ rounds on average.
+{{</note>}}
 
 ## SAT-based Approach
 So far we've seen that the Minimax-based approach is well-suited for Mastermind instances with small numbers of possible secrets, and that the lazy enumeration of consistent candidates is not optimal, but cheaper to compute, and on average not much worse.
