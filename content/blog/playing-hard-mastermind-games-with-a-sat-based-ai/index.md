@@ -15,6 +15,9 @@ Although it is difficult for a human player to make *optimal guesses* of the sec
 However, such approaches become unfeasible when the number of possibilities for secret codes grows into the millions.
 This post illustrates the problem with standard approaches, and how finding consistent candidates can be approached with [SAT](https://en.wikipedia.org/wiki/Boolean_satisfiability_problem) solving -- yielding an AI that can handle orders-of-magnitude harder Mastermind instances.
 <!--more-->
+{{<note>}}
+Update: Since writing this post, I've also built the approach into [a web app](https://mastermind-solver.bohlender.pro).
+{{</note>}}
 ## Introduction
 Every now and then, my friends and I gather to play [Mansions of Madness](https://en.wikipedia.org/wiki/Mansions_of_Madness) -- a cooperative boardgame.
 In line with its Lovecraftian setting, the game is often unforgiving so we try to optimise our every move.
