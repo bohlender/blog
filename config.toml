@@ -24,7 +24,7 @@ paginate = 5
 		portrait = "/portrait.jpg"
 		job = "Software Engineer"
 		topics = ["Formal Methods", "Modelling & Verification"]
-		description = ["I'm a software engineer with background in formal methods research. I formalise systems, develop decision procedures and care about consistency, precision and well-defined semantics in speech, writing, code & models. I'm currently working at INFORM.",
+		description = ["I'm a software engineer with background in formal methods research. I formalise systems, develop decision procedures and care about consistency, precision and well-defined semantics in speech, writing, code & models. I'm currently working at Amazon.",
                    "Since I value authenticity this site serves as both a portfolio and a personal website."]
 
   [params.blog]
